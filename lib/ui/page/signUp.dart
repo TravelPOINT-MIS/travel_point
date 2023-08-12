@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/logIn.dart';
-
-//void main() => runApp(MyApp());
+import 'package:travel_point/ui/page/logIn.dart';
 
 class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignUpDemo(),
-    );
+    return const SignUpDemo();
   }
 }
 
 class SignUpDemo extends StatefulWidget {
+  const SignUpDemo({super.key});
+
   @override
   _SignUpDemoState createState() => _SignUpDemoState();
 }
@@ -24,8 +23,7 @@ class _SignUpDemoState extends State<SignUpDemo> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Sign Up"),
-          backgroundColor: Colors.redAccent,
+        title: const Text("Sign Up"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -49,8 +47,7 @@ class _SignUpDemoState extends State<SignUpDemo> {
               child: TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                     labelText: 'Username',
                     hintText: 'Ex. User123'),
               ),
@@ -62,8 +59,7 @@ class _SignUpDemoState extends State<SignUpDemo> {
               child: TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                     labelText: 'Email',
                     hintText: 'Enter valid email id as abc@gmail.com'),
               ),
@@ -76,8 +72,7 @@ class _SignUpDemoState extends State<SignUpDemo> {
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
               ),
@@ -90,8 +85,7 @@ class _SignUpDemoState extends State<SignUpDemo> {
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                     labelText: 'Confirm Password',
                     hintText: 'Confirm Password'),
               ),
@@ -103,40 +97,42 @@ class _SignUpDemoState extends State<SignUpDemo> {
               height: 50,
               width: 250,
               decoration: BoxDecoration(
-                  color: Colors.redAccent, borderRadius: BorderRadius.circular(20)),
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (_) => SignUpPage()));
                 },
-                child: Text(
+                child: const Text(
                   'Sign Up',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text('Already have an account? '),
+                const Text('Already have an account? '),
                 TextButton(
-              onPressed: (){
-                Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-              },
-              child: Text(
-                'Log In',
-                style: TextStyle(color: Colors.redAccent),
-              ),
-            ),
-          ],)
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Log In',
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
