@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "711704239286",
+    "project_id": "travelpoint-390316",
+    "storage_bucket": "travelpoint-390316.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711704239286:android:fab3561601d932493d5a17",
+        "android_client_info": {
+          "package_name": "com.example.travel_point"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711704239286-392s8gcc3tmja8ornif0b8lmsqmpvrfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2oJdloeko4kJYSlLY7JFMuZh2RMcoFfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711704239286-392s8gcc3tmja8ornif0b8lmsqmpvrfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711704239286-44gjona594eoe2uggmo5lrndi4k2ta6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.travelPoint"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
