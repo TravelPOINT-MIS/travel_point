@@ -5,6 +5,7 @@ const Color primaryColor = Colors.redAccent;
 final ThemeData themeTravelPoint = ThemeData(
   brightness: Brightness.light,
   primaryColor: primaryColor,
+  colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
   fontFamily: 'RobotoFlex',
   appBarTheme: const AppBarTheme(color: primaryColor),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -18,6 +19,13 @@ final ThemeData themeTravelPoint = ThemeData(
   textTheme: const TextTheme(
     headlineLarge: TextStyle(color: Colors.black54, fontSize: 50),
   ),
+  inputDecorationTheme: InputDecorationTheme(
+      isCollapsed: true,
+      hintStyle: const TextStyle(color: Colors.black38),
+      focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.black54),
+          borderRadius: BorderRadius.circular(15.0)),
+      labelStyle: const TextStyle(color: Colors.black54)),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       primary: primaryColor,
