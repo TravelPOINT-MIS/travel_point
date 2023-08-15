@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:travel_point/model/AuthResponseFirebase.dart';
 import 'package:travel_point/ui/page/logInPage.dart';
+import 'package:travel_point/user/authUser.dart';
+import 'package:travel_point/user/signUpUser.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -9,6 +12,38 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  AuthResponseFirebase _authResponseFirebase = AuthResponseFirebase();
+
+  void handleSignUpUser() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    await SignUpUser.signUpUser(emailController.text, passwordController.text)
+        .then((authResponseFirebase) {
+      setState(() {
+        _authResponseFirebase = authResponseFirebase;
+      });
+
+      Navigator.of(context).pop();
+
+      if (_authResponseFirebase.userCredential != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthUser()),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,23 +54,24 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 60.0),
               child: Center(
-                child: Container(
-                    // width: 100,
-                    // height: 100,
-                    /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                    child: Icon(Icons.public)),
+                child: Icon(Icons.public),
               ),
             ),
+            // TODO change to better error display message - styling
+            if (_authResponseFirebase.error?.message != null)
+              Text(
+                _authResponseFirebase.error!.message!,
+                style: const TextStyle(color: Colors.red),
+              ),
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
+                controller: usernameController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
@@ -48,6 +84,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
@@ -61,6 +98,7 @@ class _SignUpPageState extends State<SignUpPage> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 obscureText: true,
+                controller: passwordController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
@@ -91,10 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(20)),
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => SignUpPage()));
-                },
+                onPressed: handleSignUpUser,
                 child: const Text(
                   'Sign Up',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -114,7 +149,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
                     );
                   },
                   child: const Text(

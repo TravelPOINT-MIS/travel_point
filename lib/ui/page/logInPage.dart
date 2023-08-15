@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_point/model/AuthResponseFirebase.dart';
 import 'package:travel_point/ui/page/signUpPage.dart';
 import 'package:travel_point/user/logInUser.dart';
 
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  AuthResponseFirebase _authResponseFirebase = AuthResponseFirebase();
 
   void handleLogIn() async {
     showDialog(
@@ -23,9 +25,14 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
 
-    await LogInUser.logInUser(emailController.text, passwordController.text);
+    await LogInUser.logInUser(emailController.text, passwordController.text)
+        .then((authResponseFirebase) {
+      setState(() {
+        _authResponseFirebase = authResponseFirebase;
+      });
 
-    Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
   }
 
   @override
@@ -44,6 +51,12 @@ class _LoginPageState extends State<LoginPage> {
                     width: 200, height: 150, child: Icon(Icons.public)),
               ),
             ),
+            // TODO change to better error display message - styling
+            if (_authResponseFirebase.error?.message != null)
+              Text(
+                _authResponseFirebase.error!.message!,
+                style: const TextStyle(color: Colors.red),
+              ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
