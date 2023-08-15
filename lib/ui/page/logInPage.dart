@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/ui/page/signUp.dart';
+import 'package:travel_point/ui/page/signUpPage.dart';
+import 'package:travel_point/user/logInUser.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const LoginDemo();
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void handleLogIn() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    await LogInUser.logInUser(emailController.text, passwordController.text);
+
+    Navigator.of(context).pop();
   }
-}
 
-class LoginDemo extends StatefulWidget {
-  const LoginDemo({super.key});
-
-  @override
-  _LoginDemoState createState() => _LoginDemoState();
-}
-
-class _LoginDemoState extends State<LoginDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,30 +41,25 @@ class _LoginDemoState extends State<LoginDemo> {
               padding: EdgeInsets.only(top: 60.0),
               child: Center(
                 child: SizedBox(
-                    width: 200,
-                    height: 150,
-                    /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                    child: Icon(Icons.public)),
+                    width: 200, height: 150, child: Icon(Icons.public)),
               ),
             ),
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
                     labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    hintText: 'Enter valid email id as abc@example.com'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 15),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -70,12 +75,9 @@ class _LoginDemoState extends State<LoginDemo> {
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(20)),
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => LoginPage()));
-                },
+                onPressed: handleLogIn,
                 child: const Text(
-                  'Login',
+                  'Log in',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),

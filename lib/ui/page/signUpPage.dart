@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/ui/page/logIn.dart';
+import 'package:travel_point/ui/page/logInPage.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const SignUpDemo();
-  }
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class SignUpDemo extends StatefulWidget {
-  const SignUpDemo({super.key});
-
-  @override
-  _SignUpDemoState createState() => _SignUpDemoState();
-}
-
-class _SignUpDemoState extends State<SignUpDemo> {
+class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:travel_point/theme/theme.dart';
 import 'package:travel_point/ui/layout/bottomBar.dart';
 import 'package:travel_point/ui/layout/topBar.dart';
+import 'package:travel_point/user/authUser.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-Future<void> main() async { 
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(
-   options: DefaultFirebaseOptions.currentPlatform,
- );
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -20,20 +24,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TravelPoint',
       theme: themeTravelPoint,
-      home: const MyNavigationBar(),
+      home: const AuthUser(),
     );
   }
 }
 
-class MyNavigationBar extends StatefulWidget {
-  const MyNavigationBar({Key? key}) : super(key: key);
+class MainNavigationPage extends StatefulWidget {
+  const MainNavigationPage({Key? key}) : super(key: key);
 
   @override
-  _MyNavigationBarState createState() => _MyNavigationBarState();
+  _MainNavigationPageState createState() => _MainNavigationPageState();
 }
 
-// proba
-class _MyNavigationBarState extends State<MyNavigationBar> {
+class _MainNavigationPageState extends State<MainNavigationPage> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
