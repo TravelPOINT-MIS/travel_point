@@ -19,6 +19,7 @@ final ThemeData themeTravelPoint = ThemeData(
   textTheme: const TextTheme(
     headlineLarge: TextStyle(color: Colors.black54, fontSize: 50),
   ),
+  textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black12),
   inputDecorationTheme: InputDecorationTheme(
       isCollapsed: true,
       hintStyle: const TextStyle(color: Colors.black38),
