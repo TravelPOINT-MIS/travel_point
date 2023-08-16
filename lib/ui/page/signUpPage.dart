@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/model/AuthResponseFirebase.dart';
+import 'package:travel_point/model/authResponseFirebase.dart';
 import 'package:travel_point/ui/page/logInPage.dart';
 import 'package:travel_point/user/authUser.dart';
 import 'package:travel_point/user/signUpUser.dart';

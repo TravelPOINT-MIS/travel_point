@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:travel_point/model/AuthResponseFirebase.dart';
+import 'package:travel_point/model/authResponseFirebase.dart';
 
 class LogInUser {
   static Future<AuthResponseFirebase> logInUser(
