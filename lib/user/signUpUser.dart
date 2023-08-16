@@ -13,8 +13,12 @@ class SignUpUser {
 
       await Future.delayed(const Duration(seconds: 2));
 
-      await FirestoreUser.updateUserDocument(
-          userCredential.user!.uid, {"displayName": displayName});
+      await FirestoreUser.updateUserDocument(userCredential.user!.uid, {
+        "displayName": displayName,
+        "dateCreated": DateTime.now(),
+        "dateModified": null,
+        "emailVerified": false
+      });
 
       authResponseFirebase.userCredential = userCredential;
     } on FirebaseAuthException catch (error) {
