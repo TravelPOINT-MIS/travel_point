@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:travel_point/main.dart';
 import 'package:travel_point/ui/page/logInPage.dart';
 
-class AuthUser extends StatelessWidget {
-  const AuthUser({super.key});
+class AuthUser extends StatefulWidget {
+  const AuthUser({Key? key}) : super(key: key);
 
   @override
+  _AuthUserState createState() => _AuthUserState();
+}
+
+class _AuthUserState extends State<AuthUser> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const MainNavigationPage();
-          } else {
-            return const LoginPage();
-          }
-        },
-      ),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return const MainNavigationPage();
+        } else {
+          return const LoginPage();
+        }
+      },
     );
   }
 }

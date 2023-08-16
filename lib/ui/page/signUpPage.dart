@@ -147,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const Text('Already have an account? '),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const LoginPage()),

@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('New User?'),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SignUpPage()),
                     );
