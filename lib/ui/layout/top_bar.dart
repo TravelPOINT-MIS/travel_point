@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/user/logOutUser.dart';
+import 'package:travel_point/user/user_service.dart';
 
 class TopBarApp extends StatelessWidget implements PreferredSizeWidget {
   const TopBarApp({super.key});
 
   void handleLogOutUser() async {
-    await LogOutUser.logOutUser();
+    await UserService.logOutUser();
   }
 
   @override

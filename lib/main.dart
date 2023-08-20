@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/theme/theme.dart';
-import 'package:travel_point/ui/layout/bottomBar.dart';
-import 'package:travel_point/ui/layout/topBar.dart';
-import 'package:travel_point/user/authUser.dart';
+import 'package:travel_point/ui/layout/bottom_bar.dart';
+import 'package:travel_point/ui/layout/top_bar.dart';
+import 'package:travel_point/user/auth_user.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/model/authResponseFirebase.dart';
+import 'package:travel_point/model/auth_resp_firebase_model.dart';
 import 'package:travel_point/ui/page/signUpPage.dart';
-import 'package:travel_point/user/logInUser.dart';
+import 'package:travel_point/user/user_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
 
-    await LogInUser.logInUser(emailController.text, passwordController.text)
+    await UserService.logInUser(emailController.text, passwordController.text)
         .then((authResponseFirebase) {
       setState(() {
         _authResponseFirebase = authResponseFirebase;
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                      MaterialPageRoute(builder: (context) => const SignUpPage()),
                     );
                   },
                   child: const Text(
