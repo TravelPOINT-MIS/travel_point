@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_point/main.dart';
-import 'package:travel_point/ui/page/logInPage.dart';
+import 'package:travel_point/ui/page/login_page.dart';
 
 class AuthUser extends StatefulWidget {
   const AuthUser({Key? key}) : super(key: key);

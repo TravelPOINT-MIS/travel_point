@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/ui/page/signUpPage.dart';
+import 'package:travel_point/ui/page/signup_page.dart';
 import 'package:travel_point/user/user_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -107,7 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()),
                     );
                   },
                   child: const Text(
