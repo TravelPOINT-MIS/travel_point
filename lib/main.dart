@@ -4,6 +4,7 @@ import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/theme/theme.dart';
 import 'package:travel_point/ui/layout/bottom_bar.dart';
 import 'package:travel_point/ui/layout/top_bar.dart';
+import 'package:travel_point/ui/page/map_page.dart';
 import 'package:travel_point/user/auth_user.dart';
 import 'package:travel_point/user/user_service.dart';
 import 'firebase_options.dart';
@@ -108,6 +109,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
               fontSize: 16,
             ),
           ),
+          const Expanded(
+            child: MapPage(),
+          ),
+
         ],
       ),
       bottomNavigationBar: BottomNavigationBarApp(
