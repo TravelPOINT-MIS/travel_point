@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
+import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/ui-shared/form/validators.dart';
 import 'package:travel_point/ui/page/login_page.dart';
 import 'package:travel_point/user/user_service.dart';
@@ -30,8 +31,11 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           });
 
-      await UserService.signUpUser(usernameController.text,
-              emailController.text, passwordController.text)
+      final UserData userData =
+          UserData.withDefaultValues(displayName: usernameController.text);
+
+      await UserService.signUpUser(
+              emailController.text, passwordController.text, userData)
           .then((authResponseFirebase) {
         setState(() {
           _authResponseFirebase = authResponseFirebase;
