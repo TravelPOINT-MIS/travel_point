@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/theme/theme.dart';
@@ -42,7 +42,9 @@ class MainNavigationPage extends StatefulWidget {
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _selectedIndex = 0;
-  UserData? test;
+  bool hideVerifyEmail = UserService.isCurrentUserEmailVerified();
+  Timer? timer;
+  UserData? userData;
 
   static final List<Widget> _widgetOptions = <Widget>[
     Text('Home Page', style: themeTravelPoint.textTheme.headlineLarge),
@@ -56,18 +58,52 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     });
   }
 
+  // TODO Proof of concept -> to be refactored
   @override
   void initState() {
     super.initState();
-    getDate();
+    getInitData();
   }
 
-  getDate() async {
-    final test1 = await UserService.getUserDocument(
-        FirebaseAuth.instance.currentUser!.uid);
+  getInitData() async {
+    final userDataFromDoc = await UserService.getCurrentUserDocument();
+
     setState(() {
-      test = test1;
+      userData = userDataFromDoc;
     });
+  }
+
+  void sendEmailVerification() {
+    UserService.sendCurrentUserVerificationEmail();
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      UserService.checkCurrentUserEmailVerified().then((isVerified) {
+        if (isVerified) {
+          timer.cancel();
+
+          setState(() {
+            hideVerifyEmail = true;
+          });
+
+          Navigator.of(context).pop();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -78,7 +114,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       body: Column(
         children: [
           Text(
-            test?.displayName ?? 'Display Name: N/A',
+            userData?.displayName ?? 'Display Name: N/A',
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -86,8 +122,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            test?.dateCreated != null
-                ? 'Date Created: ${test!.dateCreated.toDate().toIso8601String()}'
+            userData?.dateCreated != null
+                ? 'Date Created: ${userData!.dateCreated.toDate().toIso8601String()}'
                 : 'Date Created: N/A',
             style: const TextStyle(
               fontSize: 16,
@@ -95,8 +131,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            test?.dateModified != null
-                ? 'Date Modified: ${test!.dateModified!.toDate().toIso8601String()}'
+            userData?.dateModified != null
+                ? 'Date Modified: ${userData!.dateModified!.toDate().toIso8601String()}'
                 : 'Date Modified: N/A',
             style: const TextStyle(
               fontSize: 16,
@@ -104,15 +140,23 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Email Verified: ${test?.emailVerified ?? false}',
+            'Email Verified: ${UserService.isCurrentUserEmailVerified()}',
             style: const TextStyle(
               fontSize: 16,
             ),
           ),
+          !hideVerifyEmail
+              ? TextButton(
+                  onPressed: sendEmailVerification,
+                  child: const Text(
+                    'Verify email!',
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
+                )
+              : const Text(''),
           const Expanded(
             child: MapPage(),
           ),
-
         ],
       ),
       bottomNavigationBar: BottomNavigationBarApp(
