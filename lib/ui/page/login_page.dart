@@ -32,10 +32,8 @@ class _LoginPageState extends State<LoginPage> {
         _authResponseFirebase = authResponseFirebase;
       });
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) => const AuthUser()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const AuthUser()));
     });
   }
 
@@ -109,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('New User?'),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const SignUpPage()),
