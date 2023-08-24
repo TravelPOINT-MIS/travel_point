@@ -4,12 +4,12 @@ import 'package:travel_point/user/user_service.dart';
 class TopBarApp extends StatelessWidget implements PreferredSizeWidget {
   const TopBarApp({super.key});
 
-  void handleLogOutUser() async {
-    await UserService.logOutUser();
-  }
-
   @override
   Widget build(BuildContext context) {
+    void handleLogOutUser() async {
+      await UserService.logOutUser(context);
+    }
+
     return AppBar(
       actions: <Widget>[
         IconButton(
