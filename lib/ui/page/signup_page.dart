@@ -40,8 +40,12 @@ class _SignUpPageState extends State<SignUpPage> {
         setState(() {
           _authResponseFirebase = authResponseFirebase;
         });
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage())
+        );
 
-        Navigator.of(context).pop();
+        //Navigator.of(context).pop();
       });
     }
   }
@@ -159,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const Text('Already have an account? '),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const LoginPage()),

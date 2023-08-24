@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
 import 'package:travel_point/ui/page/signup_page.dart';
+import 'package:travel_point/user/auth_user.dart';
 import 'package:travel_point/user/user_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,7 +32,10 @@ class _LoginPageState extends State<LoginPage> {
         _authResponseFirebase = authResponseFirebase;
       });
 
-      Navigator.of(context).pop();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => const AuthUser()));
     });
   }
 
@@ -105,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('New User?'),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const SignUpPage()),
