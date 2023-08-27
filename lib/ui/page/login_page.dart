@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/ui/page/signup_page.dart';
-import 'package:travel_point/user/auth_user.dart';
 import 'package:travel_point/user/user_service.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final VoidCallback navigateToSignUpPage;
+
+  const LoginPage({super.key, required this.navigateToSignUpPage});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -17,23 +17,11 @@ class _LoginPageState extends State<LoginPage> {
   AuthResponseFirebase _authResponseFirebase = AuthResponseFirebase();
 
   void handleLogIn() async {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
     await UserService.logInUser(emailController.text, passwordController.text)
         .then((authResponseFirebase) {
       setState(() {
         _authResponseFirebase = authResponseFirebase;
       });
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const AuthUser()));
     });
   }
 
@@ -106,13 +94,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 const Text('New User?'),
                 TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignUpPage()),
-                    );
-                  },
+                  onPressed: widget.navigateToSignUpPage,
                   child: const Text(
                     'Create Account',
                     style: TextStyle(color: Colors.redAccent),

@@ -1,14 +1,13 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/theme/theme.dart';
-import 'package:travel_point/ui/layout/bottom_bar.dart';
-import 'package:travel_point/ui/layout/top_bar.dart';
-import 'package:travel_point/ui/page/map_page.dart';
-import 'package:travel_point/user/auth_user.dart';
-import 'package:travel_point/user/user_service.dart';
+import 'package:travel_point/ui/page/auth_page.dart';
+import 'package:travel_point/ui/page/home_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,141 +25,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'TravelPoint',
       theme: themeTravelPoint,
-      home: const AuthUser(),
+      home: const MainPage(),
     );
   }
 }
 
-class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({Key? key}) : super(key: key);
-
-  @override
-  _MainNavigationPageState createState() => _MainNavigationPageState();
-}
-
-class _MainNavigationPageState extends State<MainNavigationPage> {
-  int _selectedIndex = 0;
-  bool hideVerifyEmail = UserService.isCurrentUserEmailVerified();
-  Timer? timer;
-  UserData? userData;
-
-  static final List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page', style: themeTravelPoint.textTheme.headlineLarge),
-    Text('Find Home', style: themeTravelPoint.textTheme.headlineLarge),
-    Text('Near Me', style: themeTravelPoint.textTheme.headlineLarge),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  // TODO Proof of concept -> to be refactored
-  @override
-  void initState() {
-    super.initState();
-    getInitData();
-  }
-
-  getInitData() async {
-    final userDataFromDoc = await UserService.getCurrentUserDocument();
-
-    setState(() {
-      userData = userDataFromDoc;
-    });
-  }
-
-  void sendEmailVerification() {
-    UserService.sendCurrentUserVerificationEmail();
-
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
-    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      UserService.checkCurrentUserEmailVerified().then((isVerified) {
-        if (isVerified) {
-          timer.cancel();
-
-          setState(() {
-            hideVerifyEmail = true;
-          });
-
-          Navigator.of(context).pop();
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TopBarApp(),
-      // TO BE REMOVED
-      body: Column(
-        children: [
-          Text(
-            userData?.displayName ?? 'Display Name: N/A',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            userData?.dateCreated != null
-                ? 'Date Created: ${userData!.dateCreated.toDate().toIso8601String()}'
-                : 'Date Created: N/A',
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            userData?.dateModified != null
-                ? 'Date Modified: ${userData!.dateModified!.toDate().toIso8601String()}'
-                : 'Date Modified: N/A',
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Email Verified: ${UserService.isCurrentUserEmailVerified()}',
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          !hideVerifyEmail
-              ? TextButton(
-                  onPressed: sendEmailVerification,
-                  child: const Text(
-                    'Verify email!',
-                    style: TextStyle(color: Colors.redAccent),
-                  ),
-                )
-              : const Text(''),
-          const Expanded(
-            child: MapPage(),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBarApp(
-          onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Something went wrong'));
+        } else if (snapshot.hasData) {
+          return const HomePage();
+        } else {
+          return const AuthPage();
+        }
+      },
     );
   }
 }

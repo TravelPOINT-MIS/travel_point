@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
 import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/ui-shared/form/validators.dart';
-import 'package:travel_point/ui/page/login_page.dart';
-import 'package:travel_point/user/auth_user.dart';
 import 'package:travel_point/user/user_service.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  final VoidCallback navigateToLogInPage;
+
+  const SignUpPage({super.key, required this.navigateToLogInPage});
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -23,15 +23,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void handleSignUpUser() async {
     if (_formKey.currentState!.validate()) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          });
-
       final UserData userData =
           UserData.withDefaultValues(displayName: usernameController.text);
 
@@ -41,10 +32,6 @@ class _SignUpPageState extends State<SignUpPage> {
         setState(() {
           _authResponseFirebase = authResponseFirebase;
         });
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const AuthUser()));
-
-        //Navigator.of(context).pop();
       });
     }
   }
@@ -161,13 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: <Widget>[
                     const Text('Already have an account? '),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()),
-                        );
-                      },
+                      onPressed: widget.navigateToLogInPage,
                       child: const Text(
                         'Log In',
                         style: TextStyle(color: Colors.redAccent),

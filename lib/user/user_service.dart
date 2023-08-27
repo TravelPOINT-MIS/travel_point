@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
 import 'package:travel_point/model/user_data_model.dart';
 import 'package:travel_point/ui-shared/constants/constants.dart';
-import 'package:travel_point/ui/page/login_page.dart';
 
 class UserService {
   /// Returns the currently authenticated user.
@@ -41,11 +40,6 @@ class UserService {
 
   /// Logs out the currently authenticated user and clears route stack.
   static Future<void> logOutUser(BuildContext context) async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-        (route) => false);
-
     await FirebaseAuth.instance.signOut();
   }
 
