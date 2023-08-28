@@ -78,9 +78,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     timer?.cancel();
-    setState(() {
-      userData = null;
-    });
     super.dispose();
   }
 
