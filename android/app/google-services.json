@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "711704239286-392s8gcc3tmja8ornif0b8lmsqmpvrfe.apps.googleusercontent.com",
+          "client_id": "711704239286-iqstaq7p849os5nokb1psr5oa21ket4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.travel_point",
+            "certificate_hash": "46bd4138e1b72af6d55f886c51bd0a74de319ed6"
+          }
+        },
+        {
+          "client_id": "711704239286-fgrbng194jis6akgs9hgnjeb7v18fd59.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

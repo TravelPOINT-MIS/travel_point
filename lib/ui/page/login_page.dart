@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/user/user_service.dart';
+import 'package:travel_point/user/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback navigateToSignUpPage;
@@ -17,12 +17,16 @@ class _LoginPageState extends State<LoginPage> {
   AuthResponseFirebase _authResponseFirebase = AuthResponseFirebase();
 
   void handleLogIn() async {
-    await UserService.logInUser(emailController.text, passwordController.text)
+    await AuthService.logInUser(emailController.text, passwordController.text)
         .then((authResponseFirebase) {
       setState(() {
         _authResponseFirebase = authResponseFirebase;
       });
     });
+  }
+
+  void loginWithGoogle() async {
+    await AuthService.signInWithGoogle();
   }
 
   @override
@@ -101,7 +105,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ],
-            )
+            ),
+            TextButton(
+              onPressed: loginWithGoogle,
+              child: const Text(
+                'Login with Google',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
           ],
         ),
       ),

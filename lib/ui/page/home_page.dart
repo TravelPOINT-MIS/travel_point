@@ -5,7 +5,7 @@ import 'package:travel_point/theme/theme.dart';
 import 'package:travel_point/ui/layout/bottom_bar.dart';
 import 'package:travel_point/ui/layout/top_bar.dart';
 import 'package:travel_point/ui/page/map_page.dart';
-import 'package:travel_point/user/user_service.dart';
+import 'package:travel_point/user/auth_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  bool hideVerifyEmail = UserService.isCurrentUserEmailVerified();
+  bool hideVerifyEmail = AuthService.isCurrentUserEmailVerified();
   Timer? timer;
   UserData? userData;
 
@@ -35,14 +35,13 @@ class _HomePageState extends State<HomePage> {
   // TODO Proof of concept -> to be refactored
   @override
   void initState() {
-    super.initState();
     getInitData();
+    super.initState();
   }
 
   getInitData() async {
-    final userDataFromDoc = await UserService.getCurrentUserDocument();
-
-    print(userDataFromDoc);
+    // TODO no user is shown because the listener is triggered immediately after sign up since we dont use custom navigation and rely on .authStateChange()..
+    final userDataFromDoc = await AuthService.getCurrentUserDocument();
 
     setState(() {
       userData = userDataFromDoc;
@@ -50,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void sendEmailVerification() {
-    UserService.sendCurrentUserVerificationEmail();
+    AuthService.sendCurrentUserVerificationEmail();
 
     showDialog(
         barrierDismissible: false,
@@ -62,7 +61,7 @@ class _HomePageState extends State<HomePage> {
         });
 
     timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      UserService.checkCurrentUserEmailVerified().then((isVerified) {
+      AuthService.checkCurrentUserEmailVerified().then((isVerified) {
         if (isVerified) {
           timer.cancel();
 
@@ -79,6 +78,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     timer?.cancel();
+    setState(() {
+      userData = null;
+    });
     super.dispose();
   }
 
@@ -99,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 10),
           Text(
             userData?.dateCreated != null
-                ? 'Date Created: ${userData!.dateCreated.toDate().toIso8601String()}'
+                ? 'Date Created: ${userData!.dateCreated?.toDate().toIso8601String()}'
                 : 'Date Created: N/A',
             style: const TextStyle(
               fontSize: 16,
@@ -116,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Email Verified: ${UserService.isCurrentUserEmailVerified()}',
+            'Email Verified: ${AuthService.isCurrentUserEmailVerified()}',
             style: const TextStyle(
               fontSize: 16,
             ),

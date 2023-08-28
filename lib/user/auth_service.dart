@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_point/model/auth_resp_firebase_model.dart';
 import 'package:travel_point/model/user_data_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:travel_point/ui-shared/constants/constants.dart';
 
-class UserService {
+class AuthService {
   /// Returns the currently authenticated user.
   static User getCurrentUser() {
     User? currentUser = FirebaseAuth.instance.currentUser;
@@ -28,7 +29,7 @@ class UserService {
 
       await Future.delayed(const Duration(seconds: 3));
 
-      await UserService.updateUserDocument(userCredential.user!.uid, userData);
+      await AuthService.updateUserDocument(userCredential.user!.uid, userData);
 
       authResponseFirebase.userCredential = userCredential;
     } on FirebaseAuthException catch (error) {
@@ -40,7 +41,14 @@ class UserService {
 
   /// Logs out the currently authenticated user and clears route stack.
   static Future<void> logOutUser(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
+    final User currentUser = getCurrentUser();
+    final UserData userData = await getUserDocument(currentUser.uid);
+
+    if (userData.isGoogleUser) {
+      await GoogleSignIn().signOut();
+    } else {
+      await FirebaseAuth.instance.signOut();
+    }
   }
 
   /// Logs in a user with the provided email and password.
@@ -52,6 +60,41 @@ class UserService {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+
+      authResponseFirebase.userCredential = userCredential;
+    } on FirebaseAuthException catch (error) {
+      authResponseFirebase.error = error;
+    }
+
+    return authResponseFirebase;
+  }
+
+  static Future<AuthResponseFirebase> signInWithGoogle() async {
+    AuthResponseFirebase authResponseFirebase = AuthResponseFirebase();
+
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await Future.delayed(const Duration(seconds: 3));
+
+      // Once signed in, return the UserCredential
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      UserData userData = UserData.defaultValuesGoogleUser();
+
+      await AuthService.updateUserDocument(userCredential.user!.uid, userData);
 
       authResponseFirebase.userCredential = userCredential;
     } on FirebaseAuthException catch (error) {

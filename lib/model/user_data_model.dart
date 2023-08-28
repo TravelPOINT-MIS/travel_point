@@ -1,19 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
-  final String displayName;
-  final Timestamp dateCreated;
+  final String? displayName;
+  final Timestamp? dateCreated;
   final Timestamp? dateModified;
+  final bool isGoogleUser;
 
   UserData({
     required this.displayName,
     required this.dateCreated,
-    this.dateModified,
+    required this.dateModified,
+    required this.isGoogleUser,
   });
 
-  UserData.withDefaultValues({
+  UserData.defaultValuesGoogleUser({
+    this.displayName,
+    this.dateCreated,
+    this.dateModified,
+    this.isGoogleUser = true,
+  });
+
+  UserData.defaultValuesNonGoogleUser({
     required this.displayName,
     this.dateModified,
+    this.isGoogleUser = false,
   }) : dateCreated = Timestamp.now();
 
   Map<String, dynamic> toJson() {
@@ -21,18 +31,25 @@ class UserData {
       "displayName": displayName,
       "dateCreated": dateCreated,
       "dateModified": dateModified,
+      "isGoogleUser": isGoogleUser,
     };
   }
 
   factory UserData.fromDocument(DocumentSnapshot<Object?> fireStoreDocument) {
-    final userDataFireStore = fireStoreDocument.data() as Map<String, dynamic>;
+    final userDataFireStoreData = fireStoreDocument.data();
 
-    final userMetadata = UserData(
-      displayName: userDataFireStore['displayName'],
-      dateCreated: userDataFireStore['dateCreated'],
-      dateModified: userDataFireStore['dateModified'],
-    );
+    if (userDataFireStoreData != null) {
+      final userDataFireStore = userDataFireStoreData as Map<String, dynamic>;
 
-    return userMetadata;
+      final userMetadata = UserData(
+          displayName: userDataFireStore['displayName'],
+          dateCreated: userDataFireStore['dateCreated'],
+          dateModified: userDataFireStore['dateModified'],
+          isGoogleUser: userDataFireStore['isGoogleUser'] ?? false);
+
+      return userMetadata;
+    }
+
+    return UserData.defaultValuesNonGoogleUser(displayName: 'N/A');
   }
 }
