@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/model/user_data_model.dart';
-import 'package:travel_point/ui-shared/form/validators.dart';
-import 'package:travel_point/user/auth_service.dart';
+import 'package:travel_point/src/model/auth_resp_firebase_model.dart';
+import 'package:travel_point/src/model/user_data_model.dart';
+import 'package:travel_point/src/ui-shared/form/validators.dart';
+import 'package:travel_point/src/user/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
   final VoidCallback navigateToLogInPage;

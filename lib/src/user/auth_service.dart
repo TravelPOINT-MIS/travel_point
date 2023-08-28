@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:travel_point/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/model/user_data_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:travel_point/ui-shared/constants/constants.dart';
+import 'package:travel_point/src/model/auth_resp_firebase_model.dart';
+import 'package:travel_point/src/model/user_data_model.dart';
+import 'package:travel_point/src/ui-shared/constants/constants.dart';
 
 class AuthService {
   /// Returns the currently authenticated user.

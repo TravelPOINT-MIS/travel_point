@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:travel_point/model/user_data_model.dart';
-import 'package:travel_point/theme/theme.dart';
-import 'package:travel_point/ui/layout/bottom_bar.dart';
-import 'package:travel_point/ui/layout/top_bar.dart';
-import 'package:travel_point/ui/page/map_page.dart';
-import 'package:travel_point/user/auth_service.dart';
+import 'package:travel_point/src/model/user_data_model.dart';
+import 'package:travel_point/src/theme/theme.dart';
+import 'package:travel_point/src/ui/layout/bottom_bar.dart';
+import 'package:travel_point/src/ui/layout/top_bar.dart';
+import 'package:travel_point/src/ui/page/map_page.dart';
+import 'package:travel_point/src/user/auth_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

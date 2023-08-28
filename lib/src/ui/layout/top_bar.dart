@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/user/auth_service.dart';
+import 'package:travel_point/src/user/auth_service.dart';
 
 class TopBarApp extends StatelessWidget implements PreferredSizeWidget {
   const TopBarApp({super.key});

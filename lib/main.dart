@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_point/theme/theme.dart';
-import 'package:travel_point/ui/page/auth_page.dart';
-import 'package:travel_point/ui/page/home_page.dart';
+import 'package:travel_point/src/theme/theme.dart';
+import 'package:travel_point/src/ui/page/auth_page.dart';
+import 'package:travel_point/src/ui/page/home_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
