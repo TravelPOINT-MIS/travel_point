@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/src/ui/page/login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_point/injection_container.dart';
+import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:travel_point/src/features/authentication/presentation/views/login_page.dart';
 import 'package:travel_point/src/ui/page/signup_page.dart';
 
 class AuthPage extends StatefulWidget {
@@ -21,9 +24,11 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoginActive) {
-      return LoginPage(
-        navigateToSignUpPage: toggleActiveAuthPage,
-      );
+      return BlocProvider<AuthBloc>(
+          create: (context) => sl(),
+          child: LoginPage(
+            navigateToSignUpPage: toggleActiveAuthPage,
+          ));
     } else {
       return SignUpPage(
         navigateToLogInPage: toggleActiveAuthPage,

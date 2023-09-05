@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_point/src/user/auth_service.dart';
 
@@ -7,7 +8,7 @@ class TopBarApp extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     void handleLogOutUser() async {
-      await AuthService.logOutUser(context);
+      await FirebaseAuth.instance.signOut();
     }
 
     return AppBar(

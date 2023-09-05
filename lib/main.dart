@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_point/src/theme/theme.dart';
+import 'package:travel_point/config/theme.dart';
+import 'package:travel_point/injection_container.dart';
 import 'package:travel_point/src/ui/page/auth_page.dart';
 import 'package:travel_point/src/ui/page/home_page.dart';
 import 'firebase_options.dart';
@@ -15,6 +16,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await initializeDependencies();
 
   runApp(const MyApp());
 }

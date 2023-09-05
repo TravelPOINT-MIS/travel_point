@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:travel_point/src/model/auth_resp_firebase_model.dart';
-import 'package:travel_point/src/model/user_data_model.dart';
-import 'package:travel_point/src/ui-shared/form/validators.dart';
+import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
+import 'package:travel_point/core/utils/form_validators.dart';
 import 'package:travel_point/src/user/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -19,23 +18,22 @@ class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  AuthResponseFirebase _authResponseFirebase = AuthResponseFirebase();
 
   void handleSignUpUser() async {
-    if (_formKey.currentState!.validate()) {
-      final UserData userData = UserData.defaultValuesNonGoogleUser(
-          displayName: usernameController.text);
-
-      await AuthService.signUpUser(
-              emailController.text, passwordController.text, userData);
-
-      // TODO check causes error to be thrown in console...
-      //     .then((authResponseFirebase) {
-      //   setState(() {
-      //     _authResponseFirebase = authResponseFirebase;
-      //   });
-      // });
-    }
+    // if (_formKey.currentState!.validate()) {
+    //   final UserEntity userData = UserEntity.defaultValuesNonGoogleUser(
+    //       displayName: usernameController.text);
+    //
+    //   await AuthService.signUpUser(
+    //           emailController.text, passwordController.text, userData);
+    //
+    //   // TODO check causes error to be thrown in console...
+    //   //     .then((authResponseFirebase) {
+    //   //   setState(() {
+    //   //     _authResponseFirebase = authResponseFirebase;
+    //   //   });
+    //   // });
+    // }
   }
 
   @override
@@ -56,12 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Icon(Icons.public),
                   ),
                 ),
-                // TODO change to better error display message - styling
-                if (_authResponseFirebase.error?.message != null)
-                  Text(
-                    _authResponseFirebase.error!.message!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+
                 Padding(
                   //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
                   padding: const EdgeInsets.only(

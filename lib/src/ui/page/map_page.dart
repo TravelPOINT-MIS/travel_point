@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel_point/src/model/nearby_places_response.dart';
-import 'package:travel_point/src/ui-shared/constants/constants.dart';
+import 'package:travel_point/core/constants/constants.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
