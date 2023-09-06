@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.only(top: 60.0),
             child: Center(
               child:
-                  SizedBox(width: 200, height: 150, child: Icon(Icons.public)),
+              SizedBox(width: 200, height: 150, child: Icon(Icons.public)),
             ),
           ),
           Padding(
@@ -112,15 +112,13 @@ class _LoginPageState extends State<LoginPage> {
         title: const Text("Log In"),
       ),
       body: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
-        if (state is InitialAuthState) {
-          return defaultScreen();
-        } else if (state is LoadingAuthState) {
-          return Stack(
-            children: [
-              AbsorbPointer(
-                absorbing: true,
-                child: defaultScreen(),
-              ),
+        return Stack(
+          children: [
+            AbsorbPointer(
+              absorbing: state is LoadingAuthState,
+              child: defaultScreen(),
+            ),
+            if (state is LoadingAuthState)
               const AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -130,23 +128,15 @@ class _LoginPageState extends State<LoginPage> {
                     Text("Logging in..."),
                   ],
                 ),
-              )
-            ],
-          );
-        } else if (state is ErrorAuthState) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              ErrorSnackbar(
+              ),
+            if (state is ErrorAuthState)
+              ErrorSnackbarWidget(
                 errorCode: state.errorCode,
                 errorMessage: state.errorMessage,
                 context: context,
-              ),
-            );
-          });
-          return defaultScreen();
-        } else {
-          return defaultScreen();
-        }
+              )
+          ],
+        );
       }),
     );
   }
