@@ -33,3 +33,7 @@ class SignupAuthEvent extends AuthEvent {
   List<Object?> get props =>
       [displayName, email, password, confirmationPassword];
 }
+
+class LoginWithGoogleAuthEvent extends AuthEvent {
+  const LoginWithGoogleAuthEvent();
+}

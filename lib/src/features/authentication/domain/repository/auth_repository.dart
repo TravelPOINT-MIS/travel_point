@@ -17,4 +17,6 @@ abstract class AuthRepository {
   });
 
   ResultFuture<List<String>> getUsernames();
+
+  ResultFutureVoid loginWithGoogle();
 }

@@ -41,7 +41,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginWithGoogle() async {
-    // await AuthService.signInWithGoogle();
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    const loginEvent = LoginWithGoogleAuthEvent();
+
+    authBloc.add(loginEvent);
   }
 
   Widget defaultScreen() {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
 
@@ -17,13 +18,17 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<List<String>> getUsernames();
+
+  Future<void> loginWithGoogle();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  const AuthRemoteDataSourceImpl(this._auth, this._firebaseFirestore);
+  const AuthRemoteDataSourceImpl(
+      this._auth, this._firebaseFirestore, this._googleSignIn);
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firebaseFirestore;
+  final GoogleSignIn _googleSignIn;
 
   Future<DocumentReference> _getUserDocumentRef(String userUid) async {
     try {
@@ -130,6 +135,49 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on FirebaseException catch (error) {
       throw ApiException(
           errorMessage: error.message ?? 'Error while getting usernames!',
+          errorCode: error.code);
+    }
+  }
+
+  @override
+  Future<void> loginWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await Future.delayed(const Duration(seconds: 3));
+
+      DocumentReference createdUserDocumentRef =
+          await _getUserDocumentRef(userCredential.user!.uid);
+
+      DocumentSnapshot<Object?> document = await createdUserDocumentRef.get();
+
+      final documentData = document.data() as Map<String, dynamic>;
+
+      if (documentData['dateCreated'] == null) {
+        Map<String, dynamic> userData = {
+          'displayName': userCredential.user!.displayName,
+          'emailVerified': false,
+          'dateCreated': Timestamp.now(),
+          'dateModified': null,
+          'googleUser': true,
+        };
+
+        await createdUserDocumentRef.update(userData);
+      }
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while logging with google!',
           errorCode: error.code);
     }
   }

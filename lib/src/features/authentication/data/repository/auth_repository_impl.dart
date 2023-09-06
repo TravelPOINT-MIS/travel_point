@@ -58,4 +58,15 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(apiFailure);
     }
   }
+
+  @override
+  ResultFutureVoid loginWithGoogle() async {
+    try {
+      await _remoteDataSource.loginWithGoogle();
+      return const Right(null);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
 }
