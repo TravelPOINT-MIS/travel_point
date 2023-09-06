@@ -22,3 +22,15 @@ class ApiFailure extends Failure {
             errorMessage: exception.errorMessage,
             errorCode: exception.errorCode);
 }
+
+class UserInputFailure extends Failure {
+  const UserInputFailure({
+    required super.errorMessage,
+    required super.errorCode,
+  });
+
+  UserInputFailure.fromApiException(ApiException exception)
+      : this(
+            errorMessage: exception.errorMessage,
+            errorCode: exception.errorCode);
+}

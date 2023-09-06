@@ -5,6 +5,8 @@ import 'package:travel_point/src/features/authentication/presentation/bloc/auth_
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
 
+import '../../../../../core/utils/form_validators.dart';
+
 class LoginPage extends StatefulWidget {
   final VoidCallback navigateToSignUpPage;
 
@@ -18,7 +20,16 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  void handleNavigateSignupPage() {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    authBloc.emit(const InitialAuthState());
+    ScaffoldMessenger.of(context).clearSnackBars();
+    widget.navigateToSignUpPage();
+  }
+
   void handleLogIn(BuildContext context) async {
+    ScaffoldMessenger.of(context).clearSnackBars();
+
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
     final loginEvent = LoginAuthEvent(
@@ -41,13 +52,15 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.only(top: 60.0),
             child: Center(
               child:
-              SizedBox(width: 200, height: 150, child: Icon(Icons.public)),
+                  SizedBox(width: 200, height: 150, child: Icon(Icons.public)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
+            child: TextFormField(
               controller: emailController,
+              validator: Validators.requiredField,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0)),
@@ -58,8 +71,10 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: const EdgeInsets.only(
                 left: 15.0, right: 15.0, top: 15, bottom: 15),
-            child: TextField(
+            child: TextFormField(
               controller: passwordController,
+              validator: Validators.requiredField,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               obscureText: true,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -87,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               const Text('New User?'),
               TextButton(
-                onPressed: widget.navigateToSignUpPage,
+                onPressed: handleNavigateSignupPage,
                 child: const Text(
                   'Create Account',
                 ),

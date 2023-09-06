@@ -6,6 +6,7 @@ import 'package:travel_point/src/features/authentication/data/datasource/auth_re
 import 'package:travel_point/src/features/authentication/data/repository/auth_repository_impl.dart';
 import 'package:travel_point/src/features/authentication/domain/repository/auth_repository.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/signup_user.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 
 final sl = GetIt.instance;
@@ -24,5 +25,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<LoginUserUsecase>(LoginUserUsecase(sl()));
 
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
+  sl.registerSingleton<SignupUserUsecase>(SignupUserUsecase(sl()));
+
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl()));
 }

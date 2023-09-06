@@ -1,11 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> loginUser({required String email, required String password});
 
-// Future<UserModel> getCurrentUser();
+  Future<void> signupUser({
+    required String displayName,
+    required String email,
+    required bool emailVerified,
+    required String password,
+    required Timestamp dateCreated,
+    Timestamp? dateModified,
+    required bool googleUser,
+  });
+
+  Future<List<String>> getUsernames();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -14,19 +25,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firebaseFirestore;
 
-  // Future<DocumentReference> _getUserDocumentRef(String userUid) async {
-  //   try {
-  //     CollectionReference userCollection =
-  //         _firebaseFirestore.collection(FIRESTORE_USER_COLLECTION);
-  //
-  //     return userCollection.doc(userUid);
-  //   } on FirebaseException catch (error) {
-  //     throw ApiException(
-  //         errorMessage:
-  //             error.message ?? 'No document collection found for user!',
-  //         errorCode: error.code);
-  //   }
-  // }
+  Future<DocumentReference> _getUserDocumentRef(String userUid) async {
+    try {
+      CollectionReference userCollection =
+          _firebaseFirestore.collection(FIRESTORE_USER_COLLECTION);
+
+      return userCollection.doc(userUid);
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while getting user document!',
+          errorCode: error.code);
+    }
+  }
+
   //
   // Future<DataMap> _getUserDocument(String userUid) async {
   //   final DocumentReference documentRef = await _getUserDocumentRef(userUid);
@@ -51,7 +62,74 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (error) {
       throw ApiException(
-          errorMessage: error.message ?? 'Something went wrong!',
+          errorMessage: error.message ?? 'Error while logging user!',
+          errorCode: error.code);
+    }
+  }
+
+  @override
+  Future<void> signupUser(
+      {required String displayName,
+      required String email,
+      required bool emailVerified,
+      required String password,
+      required Timestamp dateCreated,
+      Timestamp? dateModified,
+      required bool googleUser}) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user == null) {
+        throw const ApiException(
+            errorMessage: 'No user returned from userCredential!',
+            errorCode: '500');
+      } else {
+        await Future.delayed(const Duration(seconds: 3));
+
+        DocumentReference createdUserDocumentRef =
+            await _getUserDocumentRef(userCredential.user!.uid);
+
+        Map<String, dynamic> userData = {
+          'displayName': displayName,
+          'emailVerified': emailVerified,
+          'dateCreated': dateCreated,
+          'dateModified': dateModified,
+          'googleUser': googleUser,
+        };
+
+        await createdUserDocumentRef.update(userData);
+      }
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while creating user!',
+          errorCode: error.code);
+    } on ApiException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<String>> getUsernames() async {
+    try {
+      CollectionReference userCollection =
+          _firebaseFirestore.collection(FIRESTORE_USER_COLLECTION);
+
+      QuerySnapshot querySnapshot = await userCollection.get();
+
+      List<String> displayNames = [];
+
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        Map<String, dynamic> userData =
+            documentSnapshot.data() as Map<String, dynamic>;
+        String displayName = userData['displayName'] as String;
+        displayNames.add(displayName);
+      }
+
+      return displayNames;
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while getting usernames!',
           errorCode: error.code);
     }
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:travel_point/core/errors/exception.dart';
 import 'package:travel_point/core/errors/failure.dart';
@@ -22,15 +23,39 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-// @override
-// ResultFuture<UserModel> getCurrentUser() async {
-//   try {
-//     UserModel userModel = await _remoteDataSource.getCurrentUser();
-//
-//     return Right(userModel);
-//   } on ApiException catch (error) {
-//     final ApiFailure apiFailure = ApiFailure.fromApiException(error);
-//     return Left(apiFailure);
-//   }
-// }
+  @override
+  ResultFutureVoid signupUser({
+    required String displayName,
+    required String email,
+    required bool emailVerified,
+    required String password,
+    required Timestamp dateCreated,
+    Timestamp? dateModified,
+    required bool googleUser,
+  }) async {
+    try {
+      await _remoteDataSource.signupUser(
+          displayName: displayName,
+          email: email,
+          emailVerified: emailVerified,
+          password: password,
+          dateCreated: dateCreated,
+          googleUser: googleUser);
+      return const Right(null);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
+
+  @override
+  ResultFuture<List<String>> getUsernames() async {
+    try {
+      List<String> usernames = await _remoteDataSource.getUsernames();
+      return Right(usernames);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
 }
