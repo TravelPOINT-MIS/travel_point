@@ -68,20 +68,14 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: 'Enter secure password'),
             ),
           ),
-          Container(
-            height: 50,
-            width: 250,
-            decoration: BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.circular(20)),
-            child: TextButton(
-              onPressed: () {
-                handleLogIn(context);
-              },
-              child: const Text(
-                'Log in',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
+          FilledButton(
+            style: ButtonStyle(
+              fixedSize: MaterialStateProperty.all(const Size(250, 50)),
+            ),
+            onPressed: () => handleLogIn(context),
+            child: const Text(
+              'Log in',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(
@@ -96,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: widget.navigateToSignUpPage,
                 child: const Text(
                   'Create Account',
-                  style: TextStyle(color: Colors.redAccent),
                 ),
               ),
             ],
@@ -105,7 +98,6 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: loginWithGoogle,
             child: const Text(
               'Login with Google',
-              style: TextStyle(color: Colors.redAccent),
             ),
           ),
         ],

@@ -12,10 +12,6 @@ class ErrorSnackbar extends SnackBar {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                errorCode,
-                style: const TextStyle(color: Colors.white),
-              ),
-              Text(
                 errorMessage,
                 style: const TextStyle(color: Colors.white),
               ),
@@ -26,7 +22,7 @@ class ErrorSnackbar extends SnackBar {
             textColor: Colors.white,
             label: 'Close',
             onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).clearSnackBars();
             },
           ),
         );

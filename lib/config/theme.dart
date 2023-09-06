@@ -27,6 +27,16 @@ final ThemeData themeTravelPoint = ThemeData(
           borderSide: const BorderSide(color: Colors.black54),
           borderRadius: BorderRadius.circular(15.0)),
       labelStyle: const TextStyle(color: Colors.black54)),
+  filledButtonTheme: const FilledButtonThemeData(
+    style: ButtonStyle(
+        textStyle: MaterialStatePropertyAll(
+          TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: MaterialStatePropertyAll(primaryColor),
+        animationDuration: Duration(milliseconds: 700)),
+  ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       primary: primaryColor,

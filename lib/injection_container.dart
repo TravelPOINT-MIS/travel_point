@@ -18,7 +18,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
 
   sl.registerSingleton<AuthRemoteDataSource>(
-      AuthRemoteDataSourceImpl(sl.get<FirebaseAuth>(), sl()));
+      AuthRemoteDataSourceImpl(sl(), sl()));
 
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
 
