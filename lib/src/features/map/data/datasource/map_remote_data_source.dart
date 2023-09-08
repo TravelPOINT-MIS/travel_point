@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:open_app_settings/open_app_settings.dart';
 import 'package:travel_point/core/errors/exception.dart';
 
 abstract class MapRemoteDataSource {
@@ -8,6 +9,9 @@ abstract class MapRemoteDataSource {
 class MapRemoteDataSourceImpl implements MapRemoteDataSource {
   @override
   Future<Position> getCurrentLocation() async {
+    //it should be here while testing, to enable location services when disabled permanently
+    // OpenAppSettings.openLocationSettings();
+
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
