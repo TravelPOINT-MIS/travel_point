@@ -69,4 +69,15 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(apiFailure);
     }
   }
+
+  @override
+  ResultFutureVoid logoutUser() async {
+    try {
+      await _remoteDataSource.logoutUser();
+      return const Right(null);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
 }

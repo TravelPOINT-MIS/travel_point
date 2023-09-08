@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/config/theme.dart';
 import 'package:travel_point/injection_container.dart';
+import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/ui/page/auth_page.dart';
 import 'package:travel_point/src/ui/page/home_page.dart';
 import 'firebase_options.dart';
@@ -44,15 +46,9 @@ class MainPage extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Something went wrong'));
-        } else if (snapshot.hasData) {
-          return const HomePage();
-        } else {
-          return const AuthPage();
-        }
+        return BlocProvider<AuthBloc>(
+            create: (context) => sl(),
+            child: snapshot.hasData ? const HomePage() : const AuthPage());
       },
     );
   }

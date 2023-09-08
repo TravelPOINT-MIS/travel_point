@@ -8,6 +8,7 @@ import 'package:travel_point/src/features/authentication/data/repository/auth_re
 import 'package:travel_point/src/features/authentication/domain/repository/auth_repository.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user_with_google.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/logout_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/signup_user.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 
@@ -34,5 +35,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<LoginUserWithGoogleUsecase>(
       LoginUserWithGoogleUsecase(sl()));
 
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
+  sl.registerSingleton<LogoutUserUsecase>(LogoutUserUsecase(sl()));
+
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
 }

@@ -28,3 +28,7 @@ class ErrorAuthState extends AuthState {
   @override
   List<Object?> get props => [errorMessage, errorCode];
 }
+
+class LoggingOutAuthState extends AuthState {
+  const LoggingOutAuthState();
+}
