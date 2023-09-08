@@ -11,6 +11,11 @@ import 'package:travel_point/src/features/authentication/domain/usecase/login_us
 import 'package:travel_point/src/features/authentication/domain/usecase/logout_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/signup_user.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:travel_point/src/features/map/data/datasource/map_remote_data_source.dart';
+import 'package:travel_point/src/features/map/data/repository/map_repository_impl.dart';
+import 'package:travel_point/src/features/map/domain/repository/map_repository.dart';
+import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
+import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -26,7 +31,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthRemoteDataSource>(
       AuthRemoteDataSourceImpl(sl(), sl(), sl()));
 
+  sl.registerSingleton<MapRemoteDataSource>(MapRemoteDataSourceImpl());
+
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
+
+  sl.registerSingleton<MapRepository>(MapRepositoryImpl(sl()));
 
   sl.registerSingleton<LoginUserUsecase>(LoginUserUsecase(sl()));
 
@@ -38,4 +47,10 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<LogoutUserUsecase>(LogoutUserUsecase(sl()));
 
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
+  sl.registerSingleton<GetUserCurrentLocationUsecase>(
+      GetUserCurrentLocationUsecase(sl()));
+
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
+
+  sl.registerFactory<MapBloc>(() => MapBloc(sl()));
 }

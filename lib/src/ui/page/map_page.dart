@@ -23,7 +23,7 @@ class _MapPageState extends State<MapPage> {
 
   late GoogleMapController _googleMapController;
 
-  String radius = "1000";
+  String radius = "10000";
   NearbyPlacesResponse nearbyPlacesResponse = NearbyPlacesResponse();
 
   @override
@@ -37,7 +37,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       body: GoogleMap(
         myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
+        zoomControlsEnabled: true,
         initialCameraPosition: _initialCameraPosition,
         mapType: MapType.normal,
         markers: markers,
