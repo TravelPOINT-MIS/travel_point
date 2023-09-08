@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:travel_point/core/widgets/ErrorSnackbar.dart';
+import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
-import 'package:travel_point/src/ui/layout/bottom_bar.dart';
-import 'package:travel_point/src/ui/layout/top_bar.dart';
+import 'package:travel_point/core/widgets/bottom_bar.dart';
+import 'package:travel_point/core/widgets/top_bar.dart';
 import 'package:travel_point/src/ui/page/map_page.dart';
 
 class HomePage extends StatefulWidget {

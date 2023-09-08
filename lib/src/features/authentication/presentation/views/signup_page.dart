@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/core/utils/form_validators.dart';
-import 'package:travel_point/core/widgets/ErrorSnackbar.dart';
+import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';

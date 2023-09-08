@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/config/theme.dart';
 import 'package:travel_point/injection_container.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
-import 'package:travel_point/src/ui/page/auth_page.dart';
-import 'package:travel_point/src/ui/page/home_page.dart';
+import 'package:travel_point/src/features/authentication/presentation/views/auth_page.dart';
+import 'package:travel_point/src/features/authentication/presentation/views/home_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
