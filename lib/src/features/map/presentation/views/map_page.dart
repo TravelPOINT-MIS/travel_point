@@ -103,33 +103,7 @@ class _MapPageState extends State<MapPage> {
         ),
       );
     });
-    //
-    // Future<Position> _determinePosition() async {
-    //   bool serviceEnabled;
-    //   LocationPermission locationPermission;
-    //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    //
-    //   if (!serviceEnabled) {
-    //     return Future.error("Location services are disabled");
-    //   }
-    //   locationPermission = await Geolocator.checkPermission();
-    //
-    //   if (locationPermission == LocationPermission.denied) {
-    //     locationPermission = await Geolocator.requestPermission();
-    //
-    //     if (locationPermission == LocationPermission.denied) {
-    //       return Future.error("Location permission are disabled");
-    //     }
-    //   }
-    //
-    //   // location permissions are denied forever, it means user should allow location permission manually
-    //   if (locationPermission == LocationPermission.deniedForever) {
-    //     return Future.error("Location permissions are permanently denied!");
-    //   }
-    //
-    //   Position position = await Geolocator.getCurrentPosition();
-    //   return position;
-    // }
+
     //
     // void getNearbyPlaces() async {
     //   Position position = await _determinePosition();

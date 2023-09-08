@@ -9,7 +9,8 @@ import 'package:travel_point/src/features/authentication/presentation/bloc/auth_
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:travel_point/core/widgets/bottom_bar.dart';
 import 'package:travel_point/core/widgets/top_bar.dart';
-import 'package:travel_point/src/ui/page/map_page.dart';
+import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
+import 'package:travel_point/src/features/map/presentation/views/map_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         )
                       : const Text(''),
-                  BlocProvider<AuthBloc>(
+                  BlocProvider<MapBloc>(
                       create: (context) => sl(),
                       child: const Expanded(
                         child: MapPage(),
