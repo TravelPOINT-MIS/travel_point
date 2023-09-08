@@ -19,7 +19,10 @@ class UserModel extends UserEntity {
             email: map['email'] as String,
             emailVerified: map['emailVerified'] as bool,
             dateCreated: map['dateCreated'] as Timestamp,
-            dateModified: map['dateModified'] as Timestamp,
+            dateModified:
+                map['dateModified'] != null ? map['dateModified'] as Timestamp : null,
             googleUser: map['googleUser'] as bool);
+
+
 
 }

@@ -20,24 +20,6 @@ class UserEntity extends Equatable {
     required this.googleUser,
   });
 
-  // factory UserData.fromDocument(DocumentSnapshot<Object?> fireStoreDocument) {
-  //   final userDataFireStoreData = fireStoreDocument.data();
-  //
-  //   if (userDataFireStoreData != null) {
-  //     final userDataFireStore = userDataFireStoreData as Map<String, dynamic>;
-  //
-  //     final userMetadata = UserData(
-  //         displayName: userDataFireStore['displayName'],
-  //         dateCreated: userDataFireStore['dateCreated'],
-  //         dateModified: userDataFireStore['dateModified'],
-  //         googleUser: userDataFireStore['isGoogleUser'] ?? false);
-  //
-  //     return userMetadata;
-  //   }
-  //
-  //   return UserData.defaultValuesNonGoogleUser(displayName: 'N/A');
-  // }
-
   @override
   List<Object?> get props => [uid];
 }

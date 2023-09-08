@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
+import 'package:travel_point/core/type/type_def.dart';
+import 'package:travel_point/src/features/authentication/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> loginUser({required String email, required String password});
@@ -43,23 +45,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  //
-  // Future<DataMap> _getUserDocument(String userUid) async {
-  //   final DocumentReference documentRef = await _getUserDocumentRef(userUid);
-  //
-  //   final DocumentSnapshot<Object?> userDataFirestore = await documentRef.get();
-  //
-  //   final data = userDataFirestore.data();
-  //
-  //   if (data != null) {
-  //     return data as DataMap;
-  //   } else {
-  //     throw const ApiException(
-  //         errorMessage: 'No document data found for user!',
-  //         errorCode: 'no-document-data');
-  //   }
-  // }
-
   @override
   Future<void> loginUser(
       {required String email, required String password}) async {
@@ -95,7 +80,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         DocumentReference createdUserDocumentRef =
             await _getUserDocumentRef(userCredential.user!.uid);
 
-        Map<String, dynamic> userData = {
+        DataMap userData = {
           'displayName': displayName,
           'emailVerified': emailVerified,
           'dateCreated': dateCreated,
@@ -125,10 +110,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       List<String> displayNames = [];
 
       for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        Map<String, dynamic> userData =
-            documentSnapshot.data() as Map<String, dynamic>;
-        String displayName = userData['displayName'] as String;
-        displayNames.add(displayName);
+        DataMap userData = documentSnapshot.data() as DataMap;
+        UserModel userModel = UserModel.fromMap(userData);
+        displayNames.add(userModel.displayName);
       }
 
       return displayNames;
@@ -162,10 +146,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       DocumentSnapshot<Object?> document = await createdUserDocumentRef.get();
 
-      final documentData = document.data() as Map<String, dynamic>;
+      final documentData = document.data() as DataMap;
 
       if (documentData['dateCreated'] == null) {
-        Map<String, dynamic> userData = {
+        DataMap userData = {
           'displayName': userCredential.user!.displayName,
           'emailVerified': false,
           'dateCreated': Timestamp.now(),
@@ -181,25 +165,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           errorCode: error.code);
     }
   }
-
-// @override
-// Future<UserModel> getCurrentUser() async {
-//   try {
-//     User? currentUser = _auth.currentUser;
-//     if (currentUser != null) {
-//       final userUid = currentUser.uid;
-//
-//       final data = await _getUserDocument(userUid);
-//
-//       return UserModel.fromMap(data);
-//     } else {
-//       throw const ApiException(
-//           errorMessage: 'No user is logged in', errorCode: 'no-user');
-//     }
-//   } on FirebaseException catch (error) {
-//     throw ApiException(
-//         errorMessage: error.message ?? 'Something went wrong!',
-//         errorCode: error.code);
-//   }
-// }
 }
