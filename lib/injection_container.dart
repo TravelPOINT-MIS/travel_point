@@ -47,10 +47,9 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<LogoutUserUsecase>(LogoutUserUsecase(sl()));
 
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
+
   sl.registerSingleton<GetUserCurrentLocationUsecase>(
       GetUserCurrentLocationUsecase(sl()));
-
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
 
   sl.registerFactory<MapBloc>(() => MapBloc(sl()));
 }

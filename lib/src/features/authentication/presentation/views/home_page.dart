@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
+import 'package:travel_point/injection_container.dart';
 import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
@@ -114,9 +115,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         )
                       : const Text(''),
-                  const Expanded(
-                    child: MapPage(),
-                  ),
+                  BlocProvider<AuthBloc>(
+                      create: (context) => sl(),
+                      child: const Expanded(
+                        child: MapPage(),
+                      ))
                 ],
               )
             : Text(error ?? 'error'),
@@ -129,7 +132,8 @@ class _HomePageState extends State<HomePage> {
       return Stack(
         children: [
           AbsorbPointer(
-            absorbing: state is LoadingAuthState || state is LoggingOutAuthState,
+            absorbing:
+                state is LoadingAuthState || state is LoggingOutAuthState,
             child: defaultScreen(),
           ),
           if (state is LoadingAuthState || state is LoggingOutAuthState)
