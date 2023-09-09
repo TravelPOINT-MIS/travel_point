@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                   const CircularProgressIndicator(),
                   const SizedBox(height: 16),
                   Text((state is LoadingAuthState)
-                      ? "Setting up..."
+                      ? "Loading..."
                       : "Logging out..."),
                 ],
               ),
