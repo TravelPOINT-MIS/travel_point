@@ -32,3 +32,12 @@ class ErrorAuthState extends AuthState {
 class LoggingOutAuthState extends AuthState {
   const LoggingOutAuthState();
 }
+
+class CheckEmailVerifyState extends AuthState {
+  const CheckEmailVerifyState(this.isEmailVerified);
+
+  final bool isEmailVerified;
+
+  @override
+  List<Object?> get props => [isEmailVerified];
+}

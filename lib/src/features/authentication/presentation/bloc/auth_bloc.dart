@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/check_email_verify_user.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/email_verify_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user_with_google.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/logout_user.dart';
@@ -11,9 +13,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignupUserUsecase _signupUserUsecase;
   final LoginUserWithGoogleUsecase _loginUserWithGoogleUsecase;
   final LogoutUserUsecase _logoutUserUsecase;
+  final CheckEmailVerifyUserUsecase _checkEmailVerifyUserUsecase;
+  final EmailVerifyUserUsecase _emailVerifyUserUsecase;
 
-  AuthBloc(this._loginUserUsecase, this._signupUserUsecase,
-      this._loginUserWithGoogleUsecase, this._logoutUserUsecase)
+  AuthBloc(
+      this._loginUserUsecase,
+      this._signupUserUsecase,
+      this._loginUserWithGoogleUsecase,
+      this._logoutUserUsecase,
+      this._checkEmailVerifyUserUsecase,
+      this._emailVerifyUserUsecase)
       : super(const InitialAuthState()) {
     on<LoginAuthEvent>(_loginUserHandler);
 
@@ -22,6 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginWithGoogleAuthEvent>(_loginWithGoogleHandler);
 
     on<LogoutUserAuthEvent>(_logoutUserHandler);
+
+    on<CheckEmailVerifyUserAuthEvent>(_checkEmailVerifyUserHandler);
+
+    on<EmailVerifyUserAuthEvent>(_emailVerifyUserHandler);
   }
 
   Future<void> _loginUserHandler(
@@ -70,6 +83,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const LoggingOutAuthState());
 
     final result = await _logoutUserUsecase();
+
+    result.fold(
+        (failure) =>
+            emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
+        (success) => emit(const InitialAuthState()));
+  }
+
+  Future<void> _checkEmailVerifyUserHandler(
+      CheckEmailVerifyUserAuthEvent event, Emitter<AuthState> emitter) async {
+    emit(const InitialAuthState());
+
+    final result = await _checkEmailVerifyUserUsecase();
+
+    result.fold(
+        (failure) =>
+            emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
+        (isEmailVerified) => emit(CheckEmailVerifyState(isEmailVerified)));
+  }
+
+  Future<void> _emailVerifyUserHandler(
+      EmailVerifyUserAuthEvent event, Emitter<AuthState> emitter) async {
+    emit(const LoadingAuthState());
+
+    final result = await _emailVerifyUserUsecase();
 
     result.fold(
         (failure) =>

@@ -24,6 +24,14 @@ abstract class AuthRemoteDataSource {
   Future<void> loginWithGoogle();
 
   Future<void> logoutUser();
+
+  Future<void> sendEmailVerification();
+
+  Future<UserModel> getCurrentUser();
+
+  Future<void> updateUser(UserModel newUser);
+
+  Future<bool> getEmailVerifiedFlag();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -33,6 +41,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
   final GoogleSignIn _googleSignIn;
+
+  Future<User> getCurrentAuthFirebaseUser() async {
+    try {
+      User? currentUserFirebase = _firebaseAuth.currentUser;
+
+      if (currentUserFirebase == null) {
+        throw const ApiException(
+            errorMessage: 'No user is logged in!', errorCode: '404');
+      } else {
+        return currentUserFirebase;
+      }
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage:
+              error.message ?? 'Error while returning current firebase user!',
+          errorCode: error.code);
+    }
+  }
 
   Future<DocumentReference> _getUserDocumentRef(String userUid) async {
     try {
@@ -47,28 +73,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<UserModel> _getCurrentUser() async {
+  @override
+  Future<UserModel> getCurrentUser() async {
     try {
-      User? currentUser = _firebaseAuth.currentUser;
+      User userFirebase = await getCurrentAuthFirebaseUser();
 
-      if (currentUser == null) {
-        throw const ApiException(
-            errorMessage: 'No user is logged in!', errorCode: '404');
-      } else {
-        DocumentReference userDocumentRef =
-            await _getUserDocumentRef(currentUser.uid);
-        DocumentSnapshot<Object?> docSnapshot = await userDocumentRef.get();
+      DocumentReference userDocumentRef =
+          await _getUserDocumentRef(userFirebase.uid);
+      DocumentSnapshot<Object?> docSnapshot = await userDocumentRef.get();
 
-        DataMap userData = docSnapshot.data() as DataMap;
-        UserModel userModel = UserModel.fromMap(userData);
+      DataMap userData = docSnapshot.data() as DataMap;
+      UserModel userModel = UserModel.fromMap(userData);
 
-        return userModel;
-      }
+      return userModel;
     } on FirebaseException catch (error) {
       throw ApiException(
           errorMessage:
               error.message ?? 'Error while getting data for current user!',
           errorCode: error.code);
+    } on ApiException {
+      rethrow;
     }
   }
 
@@ -156,12 +180,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      if (googleUser == null) {
+        throw const ApiException(
+            errorMessage: 'Logging with google canceled!',
+            errorCode: 'error-logging-google');
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       UserCredential userCredential =
@@ -179,7 +209,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (documentData['dateCreated'] == null) {
         DataMap userData = {
           'displayName': userCredential.user!.displayName,
-          'emailVerified': false,
+          'emailVerified': userCredential.user!.emailVerified,
           'dateCreated': Timestamp.now(),
           'dateModified': null,
           'googleUser': true,
@@ -197,7 +227,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> logoutUser() async {
     try {
-      UserModel currentUser = await _getCurrentUser();
+      UserModel currentUser = await getCurrentUser();
       bool withGoogleLogin = currentUser.googleUser;
 
       if (withGoogleLogin) {
@@ -209,6 +239,52 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ApiException(
           errorMessage: error.message ?? 'Error while logging out user!',
           errorCode: error.code);
+    } on ApiException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    try {
+      await getCurrentAuthFirebaseUser()
+          .then((userFirebase) => userFirebase.sendEmailVerification());
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while verifying email!',
+          errorCode: error.code);
+    } on ApiException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateUser(UserModel newUser) async {
+    try {
+      String currentUserId = await getCurrentAuthFirebaseUser()
+          .then((userFirebase) => userFirebase.uid);
+
+      DocumentReference createdUserDocumentRef =
+          await _getUserDocumentRef(currentUserId);
+
+      await createdUserDocumentRef.update(newUser.toDataMap());
+    } on FirebaseException catch (error) {
+      throw ApiException(
+          errorMessage: error.message ?? 'Error while updating user!',
+          errorCode: error.code);
+    } on ApiException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> getEmailVerifiedFlag() async {
+    try {
+      final User user = await getCurrentAuthFirebaseUser();
+
+      user.reload();
+
+      return user.emailVerified;
     } on ApiException {
       rethrow;
     }

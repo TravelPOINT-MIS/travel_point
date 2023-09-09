@@ -41,3 +41,11 @@ class LoginWithGoogleAuthEvent extends AuthEvent {
 class LogoutUserAuthEvent extends AuthEvent {
   const LogoutUserAuthEvent();
 }
+
+class CheckEmailVerifyUserAuthEvent extends AuthEvent {
+  const CheckEmailVerifyUserAuthEvent();
+}
+
+class EmailVerifyUserAuthEvent extends AuthEvent {
+  const EmailVerifyUserAuthEvent();
+}
