@@ -99,7 +99,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Email Verified: ${FirebaseAuth.instance.currentUser!.emailVerified}',
+                          'Email Verified: ${FirebaseAuth.instance.currentUser?.emailVerified}',
                           style: const TextStyle(fontSize: 12),
                         ),
                         !hideVerifyEmail
