@@ -1,15 +1,13 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
 import 'package:travel_point/src/model/nearby_places_response.dart';
-import 'package:travel_point/core/constants/constants.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -61,12 +59,16 @@ class _MapPageState extends State<MapPage> {
     const mapEvent = GetCurrentLocationEvent();
     mapBloc.add(mapEvent);
 
-    if (state is ResultMapState) {
-      final position = state.position;
-      _setInitialCameraPosition(position);
-      _drawMarkers(position);
-      setState(() {});
-    }
+    StreamSubscription<MapState>? subscription;
+
+    subscription = mapBloc.stream.listen((newState) {
+      if (newState is ResultMapState) {
+        final position = newState.position;
+        _setInitialCameraPosition(position);
+        _drawMarkers(position);
+        subscription?.cancel();
+      }
+    });
   }
 
   Widget defaultScreen(MapState state) {
