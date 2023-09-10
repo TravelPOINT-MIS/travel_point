@@ -30,7 +30,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
 
-  sl.registerSingleton(() => http.Client);
+  sl.registerSingleton<http.Client>(http.Client());
 
   sl.registerSingleton<GoogleSignIn>(GoogleSignIn());
 

@@ -1,13 +1,20 @@
 import 'package:equatable/equatable.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class MapState extends Equatable {
-  const MapState();
+  final CameraPosition cameraPosition;
+  final Set<Marker> markers;
 
+  const MapState({Set<Marker>? markers, CameraPosition? cameraPosition})
+      : markers = markers ?? const {},
+        cameraPosition = cameraPosition ??
+            const CameraPosition(
+              target: LatLng(41.555418, 22.349499),
+              zoom: 7,
+            );
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [markers, cameraPosition];
 }
 
 class InitialMapState extends MapState {
@@ -19,13 +26,7 @@ class LoadingMapState extends MapState {
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState(this.position, this.markers);
-
-  final Position position;
-  final Set<Marker> markers;
-
-  @override
-  List<Object?> get props => [position, markers];
+  const ResultMapState({super.markers, super.cameraPosition});
 }
 
 class ErrorMapState extends MapState {
@@ -35,5 +36,6 @@ class ErrorMapState extends MapState {
   final String errorCode;
 
   @override
-  List<Object?> get props => [errorMessage, errorCode];
+  List<Object?> get props =>
+      [errorMessage, errorCode, super.markers, super.cameraPosition];
 }
