@@ -55,7 +55,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       return;
     }, (position) async {
       final result = await _getNearbyPlacesUsecase(GetNearbyPlacesParams(
-          fromPosition: position, radius: event.radius, types: event.type));
+          fromPosition: position, radius: event.radius, types: event.types));
 
       result.fold(
         (failure) {

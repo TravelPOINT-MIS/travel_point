@@ -14,11 +14,11 @@ class GetCurrentLocationEvent extends MapEvent {
 
 class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
   final int radius;
-  final List<PlaceType> type;
+  final List<PlaceType> types;
 
   @override
-  List<Object?> get props => [radius, type];
+  List<Object?> get props => [radius, types];
 
   const GetCurrentLocationNearbyPlacesEvent(
-      {required this.radius, required this.type});
+      {required this.radius, required this.types});
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:travel_point/core/type/type_def.dart';
+import 'package:travel_point/core/widgets/location_type_select.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
@@ -30,11 +30,20 @@ class _MapPageState extends State<MapPage> {
     mapBloc.add(mapEvent);
   }
 
-  void handleCurrentLocationNearbyPlacesClick() {
-    final mapBloc = BlocProvider.of<MapBloc>(context);
-    const mapEvent = GetCurrentLocationNearbyPlacesEvent(
-        radius: 10000, type: [PlaceType.hair_care, PlaceType.cafe]);
-    mapBloc.add(mapEvent);
+  void handleCurrentLocationNearbyPlacesClick(context) {
+    // ERROR - TO BE FIXED
+    showDialog(
+        context: context,
+        builder: (context) {
+          return LocationTypeSelectionDialog(
+            onTypesSelected: (selectedTypes) {
+              final mapBloc = BlocProvider.of<MapBloc>(context);
+              final mapEvent = GetCurrentLocationNearbyPlacesEvent(
+                  radius: 10000, types: selectedTypes);
+              mapBloc.add(mapEvent);
+            },
+          );
+        });
   }
 
   void updateCameraPosition(CameraPosition cameraPosition) {
@@ -77,7 +86,8 @@ class _MapPageState extends State<MapPage> {
                 FloatingActionButton.extended(
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
-                  onPressed: handleCurrentLocationNearbyPlacesClick,
+                  onPressed: () =>
+                      handleCurrentLocationNearbyPlacesClick(context),
                   label: const Text("Get Nearby Places"),
                   icon: const Icon(Icons.place),
                 ),
