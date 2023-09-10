@@ -17,7 +17,6 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   GoogleMapController? _googleMapController;
   String radius = "10000";
-  String type = "hair_care";
 
   @override
   void dispose() {
@@ -51,7 +50,7 @@ class _MapPageState extends State<MapPage> {
       child: Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
-          zoomControlsEnabled: true,
+          zoomControlsEnabled: false,
           initialCameraPosition: state.cameraPosition,
           mapType: MapType.normal,
           markers: state.markers,
@@ -59,25 +58,32 @@ class _MapPageState extends State<MapPage> {
             _googleMapController = controller;
           },
         ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              onPressed: handleCurrentLocationClick,
-              label: const Text("Current location"),
-              icon: const Icon(Icons.location_history),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(left: 30.0),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FloatingActionButton.extended(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  onPressed: handleCurrentLocationClick,
+                  label: const Text("Current location"),
+                  icon: const Icon(Icons.location_history),
+                ),
+                const SizedBox(height: 16),
+                FloatingActionButton.extended(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  onPressed: handleCurrentLocationNearbyPlacesClick,
+                  label: const Text("Get Nearby Places"),
+                  icon: const Icon(Icons.place),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            FloatingActionButton.extended(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              onPressed: handleCurrentLocationNearbyPlacesClick,
-              label: const Text("Get Nearby Places"),
-              icon: const Icon(Icons.place),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -103,7 +109,7 @@ class _MapPageState extends State<MapPage> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text("Fetching your current location..."),
+                  Text("Loading map locations..."),
                 ],
               ),
             ),

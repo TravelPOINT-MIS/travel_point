@@ -64,7 +64,7 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
       required PlaceType type}) async {
     try {
       final response = await _client.post(Uri.parse(
-          '${NEARBY_SEARCH_API}?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=$type&key=$API_KEY'));
+          '${NEARBY_SEARCH_API}?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=${type.name}&key=$API_KEY'));
 
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw ApiException(
