@@ -4,6 +4,7 @@ import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 import '../../../../../core/utils/form_validators.dart';
 
@@ -53,29 +54,32 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: <Widget>[
           const Padding(
-            padding: EdgeInsets.only(top: 60.0),
+            padding: EdgeInsets.only(top: 40.0, bottom: 20.0),
             child: Center(
               child:
-                  SizedBox(width: 200, height: 150, child: Icon(Icons.public)),
+                  Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 100, height: 100))
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: TextFormField(
               controller: emailController,
               validator: Validators.requiredField,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
+                      borderRadius: BorderRadius.circular(15.0),
+                      ),
                   labelText: 'Email',
-                  hintText: 'Enter valid email id as abc@example.com'),
+                  hintText: 'Enter valid email id as abc@example.com',
+                  ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-                left: 15.0, right: 15.0, top: 15, bottom: 15),
-            child: TextFormField(
+                left: 30.0, right: 30.0, top: 15, bottom: 15),
+            child: 
+            TextFormField(
               controller: passwordController,
               validator: Validators.requiredField,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -85,11 +89,18 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(15.0)),
                   labelText: 'Password',
                   hintText: 'Enter secure password'),
+              
             ),
           ),
+          
           FilledButton(
-            style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(const Size(250, 50)),
+            style: ElevatedButton.styleFrom(
+              shadowColor: Colors.grey,
+              elevation: 3,
+              fixedSize: Size(220, 20),
+              shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
             ),
             onPressed: () => handleLogIn(context),
             child: const Text(
@@ -97,8 +108,15 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(
-            height: 10,
+          
+          Text('or'),
+          SignInButton(
+            Buttons.Google,
+            onPressed: loginWithGoogle,
+            text: "Log in with Google",
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -113,12 +131,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
-          TextButton(
-            onPressed: loginWithGoogle,
-            child: const Text(
-              'Login with Google',
-            ),
-          ),
         ],
       ),
     );
@@ -129,7 +141,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Log In"),
-      ),
+        centerTitle: true,
+    ),
+      
       body: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
         return Stack(
           children: [

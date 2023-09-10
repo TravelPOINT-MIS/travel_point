@@ -50,16 +50,16 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(top: 60.0),
+              padding: EdgeInsets.only(top: 40.0,bottom: 20.0),
               child: Center(
-                child: Icon(Icons.public),
+                child: Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 100, height: 100)),
               ),
             ),
 
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                  left: 30.0, right: 30.0, top: 15, bottom: 0),
               child: TextFormField(
                 controller: usernameController,
                 validator: Validators.requiredField,
@@ -72,9 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 15, bottom: 0),
               child: TextFormField(
                 controller: emailController,
                 validator: Validators.requiredField,
@@ -88,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                  left: 30.0, right: 30.0, top: 15, bottom: 0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 obscureText: true,
@@ -104,7 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 15),
+                  left: 30.0, right: 30.0, top: 15, bottom: 15),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 obscureText: true,
@@ -118,25 +116,25 @@ class _SignUpPageState extends State<SignUpPage> {
                     hintText: 'Confirm Password'),
               ),
             ),
-            // SizedBox(
-            //   height: 100,
-            // ),
             Container(
-              height: 50,
-              width: 250,
+              height: 40,
+              width: 220,
               decoration: BoxDecoration(
-                  color: Colors.redAccent,
-                  borderRadius: BorderRadius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5,
+                    )
+                  ],
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10),),
               child: TextButton(
                 onPressed: () => handleSignUpUser(context),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
             ),
 
             Row(
@@ -162,9 +160,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("Sign Up"),
+          centerTitle: true,
         ),
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (_, state) {
