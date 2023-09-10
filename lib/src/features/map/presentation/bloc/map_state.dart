@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class MapState extends Equatable {
   const MapState();
+
 
   @override
   List<Object?> get props => [];
@@ -17,12 +19,13 @@ class LoadingMapState extends MapState {
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState(this.position);
+  const ResultMapState(this.position, this.markers);
 
   final Position position;
+  final Set<Marker> markers;
 
   @override
-  List<Object?> get props => [position];
+  List<Object?> get props => [position, markers];
 }
 
 class ErrorMapState extends MapState {

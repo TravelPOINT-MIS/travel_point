@@ -70,7 +70,9 @@ class _MapPageState extends State<MapPage> {
   void getNearbyPlaces() async {
     final mapBloc = BlocProvider.of<MapBloc>(context);
     const mapEvent = GetCurrentLocationEvent();
+    const nearbyPlacesEvent = GetCurrentLocationNearbyPlacesEvent();
     mapBloc.add(mapEvent);
+    mapBloc.add(nearbyPlacesEvent);
 
     StreamSubscription<MapState>? subscription;
 
