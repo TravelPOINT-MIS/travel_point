@@ -10,3 +10,7 @@ abstract class MapEvent extends Equatable {
 class GetCurrentLocationEvent extends MapEvent {
   const GetCurrentLocationEvent();
 }
+
+class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
+  const GetCurrentLocationNearbyPlacesEvent();
+}

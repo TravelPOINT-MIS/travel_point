@@ -1,12 +1,26 @@
+import 'dart:convert';
+
 import 'package:geolocator/geolocator.dart';
-import 'package:open_app_settings/open_app_settings.dart';
+import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
+import 'package:travel_point/core/type/type_def.dart';
+import 'package:http/http.dart' as http;
+import 'package:travel_point/src/model/nearby_places_response.dart';
 
 abstract class MapRemoteDataSource {
   Future<Position> getCurrentLocation();
+
+  Future<NearbyPlacesResponse> getNearbyPlaces(
+      {required Position fromPosition,
+      required int radius,
+      required PlaceType type});
 }
 
 class MapRemoteDataSourceImpl implements MapRemoteDataSource {
+  MapRemoteDataSourceImpl(this._client);
+
+  final http.Client _client;
+
   @override
   Future<Position> getCurrentLocation() async {
     //it should be here while testing, to enable location services when disabled permanently
@@ -40,6 +54,38 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
     } on LocationServiceDisabledException catch (e) {
       throw ApiException(
           errorMessage: e.toString(), errorCode: 'location-permission-denied');
+    }
+  }
+
+  @override
+  Future<NearbyPlacesResponse> getNearbyPlaces(
+      {required Position fromPosition,
+      required int radius,
+      required PlaceType type}) async {
+    try {
+      final response = await _client.post(Uri.parse(NEARBY_SEARCH_API),
+          body: jsonEncode({
+            'location': '${fromPosition.latitude},${fromPosition.longitude}',
+            'radius': '$radius',
+            'type': '$type',
+            'key': API_KEY
+          }));
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ApiException(
+            errorMessage: response.body,
+            errorCode: response.statusCode.toString());
+      }
+
+      NearbyPlacesResponse nearbyPlacesResponse =
+          NearbyPlacesResponse.fromJson(jsonDecode(response.body));
+
+      return nearbyPlacesResponse;
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+          errorMessage: e.toString(), errorCode: 'error-fetching-data');
     }
   }
 }

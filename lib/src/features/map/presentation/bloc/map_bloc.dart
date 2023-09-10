@@ -1,12 +1,14 @@
 import 'package:bloc/bloc.dart';
+import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final GetUserCurrentLocationUsecase _getUserCurrentLocationUsecase;
+  final GetNearbyPlacesUsecase _getNearbyPlacesUsecase;
 
-  MapBloc(this._getUserCurrentLocationUsecase)
+  MapBloc(this._getUserCurrentLocationUsecase, this._getNearbyPlacesUsecase)
       : super(const InitialMapState()) {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
   }
