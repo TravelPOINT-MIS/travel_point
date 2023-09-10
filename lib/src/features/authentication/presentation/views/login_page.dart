@@ -56,9 +56,15 @@ class _LoginPageState extends State<LoginPage> {
           const Padding(
             padding: EdgeInsets.only(top: 40.0, bottom: 20.0),
             child: Center(
-              child:
-                  Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 100, height: 100))
-            ),
+                child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Image(
+                image: AssetImage('assets/logo.png'),
+                fit: BoxFit.fill, // You can adjust the fit as needed
+              ),
+            ) // Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 100, height: 100))
+                ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -67,19 +73,18 @@ class _LoginPageState extends State<LoginPage> {
               validator: Validators.requiredField,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      ),
-                  labelText: 'Email',
-                  hintText: 'Enter valid email id as abc@example.com',
-                  ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                labelText: 'Email',
+                hintText: 'Enter valid email id as abc@example.com',
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
                 left: 30.0, right: 30.0, top: 15, bottom: 15),
-            child: 
-            TextFormField(
+            child: TextFormField(
               controller: passwordController,
               validator: Validators.requiredField,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -89,29 +94,27 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(15.0)),
                   labelText: 'Password',
                   hintText: 'Enter secure password'),
-              
             ),
           ),
-          
           FilledButton(
             style: ElevatedButton.styleFrom(
               shadowColor: Colors.grey,
-              elevation: 3,
-              fixedSize: Size(220, 20),
+              elevation: 2,
+              fixedSize: const Size(220, 20),
               shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
             ),
             onPressed: () => handleLogIn(context),
             child: const Text(
               'Log in',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
             ),
           ),
-          
-          Text('or'),
+          const Text('or'),
           SignInButton(
             Buttons.Google,
+            elevation: 1,
             onPressed: loginWithGoogle,
             text: "Log in with Google",
             shape: const RoundedRectangleBorder(
@@ -142,8 +145,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text("Log In"),
         centerTitle: true,
-    ),
-      
+      ),
       body: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
         return Stack(
           children: [

@@ -50,12 +50,17 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(top: 40.0,bottom: 20.0),
+              padding: EdgeInsets.only(top: 40.0, bottom: 20.0),
               child: Center(
-                child: Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 100, height: 100)),
-              ),
+                  child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Image(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.fill, // You can adjust the fit as needed
+                ),
+              )),
             ),
-
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.only(
@@ -72,7 +77,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 15, bottom: 0),
+              padding: const EdgeInsets.only(
+                  left: 30.0, right: 30.0, top: 15, bottom: 0),
               child: TextFormField(
                 controller: emailController,
                 validator: Validators.requiredField,
@@ -120,23 +126,23 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 40,
               width: 220,
               decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5,
-                    )
-                  ],
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(10),),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.white12,
+                    blurRadius: 5,
+                  )
+                ],
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: TextButton(
                 onPressed: () => handleSignUpUser(context),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.normal),
                 ),
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
