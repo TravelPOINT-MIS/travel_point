@@ -14,7 +14,7 @@ class GetCurrentLocationEvent extends MapEvent {
 
 class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
   final int radius;
-  final PlaceType type;
+  final List<PlaceType> type;
 
   @override
   List<Object?> get props => [radius, type];
