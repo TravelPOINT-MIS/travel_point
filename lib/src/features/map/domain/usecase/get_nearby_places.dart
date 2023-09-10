@@ -16,18 +16,18 @@ class GetNearbyPlacesUsecase
     return await _mapRepository.getNearbyPlaces(
         fromPosition: params.fromPosition,
         radius: params.radius,
-        type: params.type);
+        types: params.types);
   }
 }
 
 class GetNearbyPlacesParams extends Equatable {
   final Position fromPosition;
   final int radius;
-  final PlaceType type;
+  final List<PlaceType> types;
 
   const GetNearbyPlacesParams(
-      {required this.fromPosition, required this.radius, required this.type});
+      {required this.fromPosition, required this.radius, required this.types});
 
   @override
-  List<Object?> get props => [fromPosition, radius, type];
+  List<Object?> get props => [fromPosition, radius, types];
 }

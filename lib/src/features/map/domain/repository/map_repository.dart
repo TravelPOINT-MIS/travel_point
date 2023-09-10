@@ -10,5 +10,5 @@ abstract class MapRepository {
   ResultFuture<NearbyPlacesResponse> getNearbyPlaces(
       {required Position fromPosition,
       required int radius,
-      required PlaceType type});
+      required List<PlaceType> types});
 }

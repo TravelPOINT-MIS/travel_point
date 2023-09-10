@@ -27,11 +27,11 @@ class MapRepositoryImpl implements MapRepository {
   ResultFuture<NearbyPlacesResponse> getNearbyPlaces(
       {required Position fromPosition,
       required int radius,
-      required PlaceType type}) async {
+      required List<PlaceType> types}) async {
     try {
       NearbyPlacesResponse nearbyPlacesResponse =
           await _remoteDataSource.getNearbyPlaces(
-              fromPosition: fromPosition, radius: radius, type: type);
+              fromPosition: fromPosition, radius: radius, types: types);
 
       return Right(nearbyPlacesResponse);
     } on ApiException catch (error) {

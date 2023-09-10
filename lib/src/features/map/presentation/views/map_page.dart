@@ -33,7 +33,7 @@ class _MapPageState extends State<MapPage> {
   void handleCurrentLocationNearbyPlacesClick() {
     final mapBloc = BlocProvider.of<MapBloc>(context);
     const mapEvent = GetCurrentLocationNearbyPlacesEvent(
-        radius: 10000, type: PlaceType.hair_care);
+        radius: 10000, type: [PlaceType.hair_care, PlaceType.cafe]);
     mapBloc.add(mapEvent);
   }
 

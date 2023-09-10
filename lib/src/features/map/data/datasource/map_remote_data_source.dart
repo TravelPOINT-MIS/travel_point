@@ -13,7 +13,7 @@ abstract class MapRemoteDataSource {
   Future<NearbyPlacesResponse> getNearbyPlaces(
       {required Position fromPosition,
       required int radius,
-      required PlaceType type});
+      required List<PlaceType> types});
 }
 
 class MapRemoteDataSourceImpl implements MapRemoteDataSource {
@@ -61,21 +61,27 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
   Future<NearbyPlacesResponse> getNearbyPlaces(
       {required Position fromPosition,
       required int radius,
-      required PlaceType type}) async {
+      required List<PlaceType> types}) async {
+    List<NearbyPlacesResponse> responses = [];
+    NearbyPlacesResponse combinedResponse = NearbyPlacesResponse(
+        results: []); // Initialize an empty response object
+
     try {
-      final response = await _client.post(Uri.parse(
-          '${NEARBY_SEARCH_API}?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=${type.name}&key=$API_KEY'));
+      for (PlaceType type in types) {
+        final response = await _client.post(Uri.parse(
+            '${NEARBY_SEARCH_API}?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=${type.name}&key=$API_KEY'));
 
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        throw ApiException(
-            errorMessage: response.body,
-            errorCode: response.statusCode.toString());
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          throw ApiException(
+              errorMessage: response.body,
+              errorCode: response.statusCode.toString());
+        }
+
+        NearbyPlacesResponse nearbyPlacesResponse =
+            NearbyPlacesResponse.fromJson(jsonDecode(response.body));
+        combinedResponse.results?.addAll(nearbyPlacesResponse.results ?? []);
       }
-
-      NearbyPlacesResponse nearbyPlacesResponse =
-          NearbyPlacesResponse.fromJson(jsonDecode(response.body));
-
-      return nearbyPlacesResponse;
+      return combinedResponse;
     } on ApiException {
       rethrow;
     } catch (e) {
