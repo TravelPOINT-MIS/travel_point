@@ -8,22 +8,23 @@ class TopBarApp extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     Widget defaultScreen() {
       return AppBar(
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: const Icon(Icons.logout_rounded),
-        //     onPressed: () => handleLogout(context),
-        //   ),
-        //   //IconButton
-        // ],
         leading: IconButton(
-          icon: const Icon(Icons.public),
+          icon: const SizedBox(
+                width: 60,
+                height: 60,
+                child: Image(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.fill, 
+                ),
+              ),
+              
           tooltip: 'Menu Icon',
           onPressed: () {},
         ),
-        title: const Text('TravelPoint'),
+        title: const Text('TravelPoint'), 
+        //centerTitle: true,
       );
     }
-
     return defaultScreen();
   }
 
