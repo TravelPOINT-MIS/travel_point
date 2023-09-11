@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/core/type/type_def.dart';
 import 'package:travel_point/core/widgets/drawer_bar.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
+import 'package:travel_point/core/widgets/loading_dialog.dart';
 import 'package:travel_point/injection_container.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
@@ -64,16 +65,7 @@ class _HomePageState extends State<HomePage> {
             child: defaultScreen(state),
           ),
           if (state is LoadingAuthState)
-            AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
-                  Text(state.loadingMessage),
-                ],
-              ),
-            ),
+            LoadingDialog(message: state.loadingMessage),
           if (state is ErrorAuthState)
             ErrorSnackbarWidget(
               errorCode: state.errorCode,

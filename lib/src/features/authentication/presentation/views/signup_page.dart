@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/core/utils/form_validators.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
+import 'package:travel_point/core/widgets/loading_dialog.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
@@ -182,16 +183,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: defaultScreen(),
                 ),
                 if (state is LoadingAuthState)
-                  AlertDialog(
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CircularProgressIndicator(),
-                        const SizedBox(height: 16),
-                        Text(state.loadingMessage),
-                      ],
-                    ),
-                  ),
+                  LoadingDialog(message: state.loadingMessage),
                 if (state is ErrorAuthState)
                   ErrorSnackbarWidget(
                     errorCode: state.errorCode,
