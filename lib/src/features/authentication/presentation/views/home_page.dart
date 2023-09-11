@@ -60,20 +60,17 @@ class _HomePageState extends State<HomePage> {
       return Stack(
         children: [
           AbsorbPointer(
-            absorbing:
-                state is LoadingAuthState || state is LoggingOutAuthState,
+            absorbing: state is LoadingAuthState,
             child: defaultScreen(state),
           ),
-          if (state is LoadingAuthState || state is LoggingOutAuthState)
+          if (state is LoadingAuthState)
             AlertDialog(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const CircularProgressIndicator(),
                   const SizedBox(height: 16),
-                  Text((state is LoadingAuthState)
-                      ? "Loading..."
-                      : "Logging out..."),
+                  Text(state.loadingMessage),
                 ],
               ),
             ),

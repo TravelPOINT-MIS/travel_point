@@ -12,7 +12,10 @@ class InitialAuthState extends AuthState {
 }
 
 class LoadingAuthState extends AuthState {
-  const LoadingAuthState();
+  final String loadingMessage;
+
+  const LoadingAuthState({String? loadingMessage})
+      : loadingMessage = loadingMessage ?? 'Loading...';
 }
 
 class ResultAuthState extends AuthState {
@@ -27,10 +30,6 @@ class ErrorAuthState extends AuthState {
 
   @override
   List<Object?> get props => [errorMessage, errorCode];
-}
-
-class LoggingOutAuthState extends AuthState {
-  const LoggingOutAuthState();
 }
 
 class CheckEmailVerifyState extends AuthState {

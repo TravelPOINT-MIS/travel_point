@@ -154,13 +154,13 @@ class _LoginPageState extends State<LoginPage> {
               child: defaultScreen(),
             ),
             if (state is LoadingAuthState)
-              const AlertDialog(
+              AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text("Logging in..."),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(state.loadingMessage),
                   ],
                 ),
               ),

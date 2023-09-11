@@ -139,7 +139,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 onPressed: () => handleSignUpUser(context),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.normal),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             ),
@@ -179,13 +182,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: defaultScreen(),
                 ),
                 if (state is LoadingAuthState)
-                  const AlertDialog(
+                  AlertDialog(
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
-                        Text("Signing up..."),
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: 16),
+                        Text(state.loadingMessage),
                       ],
                     ),
                   ),

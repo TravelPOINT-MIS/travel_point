@@ -24,7 +24,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _getUserCurrentLocationHandler(
       GetCurrentLocationEvent event, Emitter<MapState> emitter) async {
-    emit(const LoadingMapState());
+    emit(const LoadingMapState(
+        loadingMessage: 'Loading your current location..'));
 
     final result = await _getUserCurrentLocationUsecase();
 
@@ -50,7 +51,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<void> _getCurrentNearbyPlacesHandler(
       GetCurrentLocationNearbyPlacesEvent event,
       Emitter<MapState> emitter) async {
-    emit(const LoadingMapState());
+    emit(const LoadingMapState(loadingMessage: 'Loading nearby places..'));
     CameraPosition? cameraPosition;
     Set<Marker> markers = {};
 

@@ -115,13 +115,13 @@ class _MapPageState extends State<MapPage> {
             child: defaultScreen(state, mapContext),
           ),
           if (state is LoadingMapState)
-            const AlertDialog(
+            AlertDialog(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text("Loading map locations..."),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(state.loadingMessage),
                 ],
               ),
             ),

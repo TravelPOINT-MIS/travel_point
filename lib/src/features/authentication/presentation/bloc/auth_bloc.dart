@@ -39,7 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _loginUserHandler(
       LoginAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoadingAuthState());
+    emit(const LoadingAuthState(loadingMessage: 'Logging in user..'));
 
     final result = await _loginUserUsecase(
         LoginParams(email: event.email, password: event.password));
@@ -52,7 +52,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _signUpUserHandler(
       SignupAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoadingAuthState());
+    emit(const LoadingAuthState(loadingMessage: 'Setting up user..'));
 
     final result = await _signupUserUsecase(CreateUserParams(
         displayName: event.displayName,
@@ -68,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _loginWithGoogleHandler(
       LoginWithGoogleAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoadingAuthState());
+    emit(const LoadingAuthState(loadingMessage: 'Setting google account..'));
 
     final result = await _loginUserWithGoogleUsecase();
 
@@ -80,7 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _logoutUserHandler(
       LogoutUserAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoggingOutAuthState());
+    emit(const LoadingAuthState(loadingMessage: 'Logging out user..'));
 
     final result = await _logoutUserUsecase();
 
@@ -104,7 +104,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _emailVerifyUserHandler(
       EmailVerifyUserAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoadingAuthState());
+    emit(
+        const LoadingAuthState(loadingMessage: 'Sending email verification..'));
 
     final result = await _emailVerifyUserUsecase();
 

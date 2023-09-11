@@ -22,7 +22,10 @@ class InitialMapState extends MapState {
 }
 
 class LoadingMapState extends MapState {
-  const LoadingMapState();
+  final String loadingMessage;
+
+  const LoadingMapState({String? loadingMessage})
+      : loadingMessage = loadingMessage ?? 'Loading map locations...';
 }
 
 class ResultMapState extends MapState {
