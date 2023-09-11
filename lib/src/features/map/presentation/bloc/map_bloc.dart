@@ -57,7 +57,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     Set<Marker> markers = {};
     List<PlaceModel> places = [];
 
-
     final resultCurrentLocation = await _getUserCurrentLocationUsecase();
 
     resultCurrentLocation.fold((failure) {
@@ -120,10 +119,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           );
 
           markers.add(currentLocationMarker);
-          print("Places: " + places[0].name);
 
-          emit(
-              ResultMapState(markers: markers, cameraPosition: cameraPosition, places: places));
+          emit(ResultMapState(
+              markers: markers,
+              cameraPosition: cameraPosition,
+              places: places));
         },
       );
     });

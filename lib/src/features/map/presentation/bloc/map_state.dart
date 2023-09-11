@@ -17,7 +17,7 @@ abstract class MapState extends Equatable {
               target: LatLng(41.555418, 22.349499),
               zoom: 7,
             ),
-        places = const [];
+        places = places ?? const [];
 
   @override
   List<Object?> get props => [markers, cameraPosition, places];
