@@ -52,6 +52,7 @@ class _UserInfoPage extends State<UserInfoPage> {
       body: error == null?
       Column(
         //add style
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 20),
                         const Icon(Icons.person,size: 100,),
@@ -72,6 +73,7 @@ class _UserInfoPage extends State<UserInfoPage> {
                           userData?.dateCreated != null
                               ? 'Date Created: ${userData!.dateCreated.toDate().toIso8601String()}'
                               : 'Date Created: N/A',
+                          textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 20),
@@ -79,17 +81,20 @@ class _UserInfoPage extends State<UserInfoPage> {
                           userData?.dateModified != null
                               ? 'Date Modified: ${userData!.dateModified!.toDate().toIso8601String()}'
                               : 'Date Modified: N/A',
+                          textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 20),
                         Text(
                           'Email Verified: ${FirebaseAuth.instance.currentUser?.emailVerified}',
+                          textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 14),
                         ),
                         FirebaseAuth.instance.currentUser?.emailVerified == false
                             ? TextButton(
                                 onPressed: () => handleEmailVerify(context),
                                 child: const Text('Verify email!',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(color: Colors.redAccent)),
                               )
                             : const Text('')
