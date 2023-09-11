@@ -18,7 +18,7 @@ abstract class MapState extends Equatable {
 }
 
 class InitialMapState extends MapState {
-  const InitialMapState();
+  const InitialMapState({super.markers, super.cameraPosition});
 }
 
 class LoadingMapState extends MapState {

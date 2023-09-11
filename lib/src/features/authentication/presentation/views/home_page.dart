@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_point/core/type/type_def.dart';
 import 'package:travel_point/core/widgets/drawer_bar.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/injection_container.dart';
@@ -8,6 +9,8 @@ import 'package:travel_point/src/features/authentication/presentation/bloc/auth_
 import 'package:travel_point/core/widgets/bottom_bar.dart';
 import 'package:travel_point/core/widgets/top_bar.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
+import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
+import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
 import 'package:travel_point/src/features/map/presentation/views/map_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,33 +21,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  MapPageType _activeMapPageTab = MapPageType.ExploreMap;
 
-  void _onItemTapped(int index) {
+  void handleItemTapped(MapPageType mapPageType, context, MapState state) {
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+    final mapEvent =
+        ClearMarkersEvent(keepSameCameraPosition: state.cameraPosition);
+    mapBloc.add(mapEvent);
+
     setState(() {
-      _selectedIndex = index;
+      _activeMapPageTab = mapPageType;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     Widget defaultScreen(AuthState state) {
-      return Scaffold(
-        appBar: const TopBarApp(),
-        endDrawer: const DrawerMenu(),
-        // TO BE REMOVED
-        body: Column(
-          children: [
-            BlocProvider<MapBloc>(
-                create: (context) => sl(),
-                child: const Expanded(
-                  child: MapPage(),
-                ))
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBarApp(
-            onItemTapped: _onItemTapped, selectedIndex: _selectedIndex),
-      );
+      return BlocProvider<MapBloc>(
+          create: (context) => sl(),
+          child: BlocBuilder<MapBloc, MapState>(builder: (mapContext, state) {
+            void onItemTap(MapPageType mapPageType) {
+              return handleItemTapped(mapPageType, mapContext, state);
+            }
+
+            return Scaffold(
+              appBar: const TopBarApp(),
+              endDrawer: const DrawerMenu(),
+              body: MapPage(activeMapPageTab: _activeMapPageTab),
+              bottomNavigationBar: BottomNavigationBarApp(
+                onItemTapped: onItemTap,
+                activeMapTab: _activeMapPageTab,
+              ),
+            );
+          }));
     }
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {

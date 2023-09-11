@@ -14,6 +14,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       : super(const InitialMapState()) {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
     on<GetCurrentLocationNearbyPlacesEvent>(_getCurrentNearbyPlacesHandler);
+    on<ClearMarkersEvent>(_handleClearMarkers);
+  }
+
+  Future<void> _handleClearMarkers(
+      ClearMarkersEvent event, Emitter<MapState> emitter) async {
+    emit(InitialMapState(cameraPosition: event.keepSameCameraPosition));
   }
 
   Future<void> _getUserCurrentLocationHandler(

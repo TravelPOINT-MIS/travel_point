@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/type/type_def.dart';
 
 abstract class MapEvent extends Equatable {
@@ -21,4 +22,9 @@ class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
 
   const GetCurrentLocationNearbyPlacesEvent(
       {required this.radius, required this.types});
+}
+
+class ClearMarkersEvent extends MapEvent {
+  final CameraPosition? keepSameCameraPosition;
+  const ClearMarkersEvent({this.keepSameCameraPosition});
 }

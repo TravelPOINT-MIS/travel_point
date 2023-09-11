@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:travel_point/core/widgets/location_type_select.dart';
+import 'package:travel_point/core/type/type_def.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  final MapPageType activeMapPageTab;
+
+  const MapPage({Key? key, required this.activeMapPageTab}) : super(key: key);
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -31,19 +33,20 @@ class _MapPageState extends State<MapPage> {
   }
 
   void handleCurrentLocationNearbyPlacesClick(context) {
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+    const mapEvent = GetCurrentLocationNearbyPlacesEvent(
+        radius: 10000, types: [PlaceType.bar]);
+    mapBloc.add(mapEvent);
     // ERROR - TO BE FIXED
-    showDialog(
-        context: context,
-        builder: (context) {
-          return LocationTypeSelectionDialog(
-            onTypesSelected: (selectedTypes) {
-              final mapBloc = BlocProvider.of<MapBloc>(context);
-              final mapEvent = GetCurrentLocationNearbyPlacesEvent(
-                  radius: 10000, types: selectedTypes);
-              mapBloc.add(mapEvent);
-            },
-          );
-        });
+    // showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return LocationTypeSelectionDialog(
+    //         onTypesSelected: (selectedTypes) {
+    //
+    //         },
+    //       );
+    //     });
   }
 
   void updateCameraPosition(CameraPosition cameraPosition) {
@@ -75,22 +78,26 @@ class _MapPageState extends State<MapPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FloatingActionButton.extended(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                  onPressed: handleCurrentLocationClick,
-                  label: const Text("Current location"),
-                  icon: const Icon(Icons.location_history),
-                ),
+                widget.activeMapPageTab == MapPageType.ExploreMap
+                    ? FloatingActionButton.extended(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        onPressed: handleCurrentLocationClick,
+                        label: const Text("Current location"),
+                        icon: const Icon(Icons.location_history),
+                      )
+                    : const Center(),
                 const SizedBox(height: 16),
-                FloatingActionButton.extended(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                  onPressed: () =>
-                      handleCurrentLocationNearbyPlacesClick(context),
-                  label: const Text("Get Nearby Places"),
-                  icon: const Icon(Icons.place),
-                ),
+                widget.activeMapPageTab == MapPageType.FindHomeMap
+                    ? FloatingActionButton.extended(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        onPressed: () =>
+                            handleCurrentLocationNearbyPlacesClick(context),
+                        label: const Text("Get Nearby Places"),
+                        icon: const Icon(Icons.place),
+                      )
+                    : const Center(),
               ],
             ),
           ),

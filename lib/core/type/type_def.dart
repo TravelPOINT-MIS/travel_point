@@ -9,6 +9,8 @@ typedef ResultFutureVoid = Future<Either<Failure, void>>;
 
 typedef DataMap = Map<String, dynamic>;
 
+enum MapPageType { NearByMap, ExploreMap, FindHomeMap }
+
 enum PlaceType {
   accounting,
   airport,
