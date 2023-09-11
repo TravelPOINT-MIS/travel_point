@@ -110,32 +110,36 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
             children: [
               const Text('Enter Radius:'),
               Padding(
-                padding: const EdgeInsets.only(top: 15.0), // Add bottom padding
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    hintText:
-                        'Distance in meters..', // Your placeholder text here
-                  ),
-                  controller: _radiusController,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      _radius = double.tryParse(value);
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a radius value.';
-                    }
-                    if (_radius == null) {
-                      return 'Invalid radius value.';
-                    }
-                    return null;
-                  },
-                  autovalidateMode: AutovalidateMode
-                      .onUserInteraction, // Autovalidate on user interaction
-                ),
-              ),
+                  padding: const EdgeInsets.only(top: 15.0),
+                  // Add bottom padding
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      hintText:
+                          'Distance in meters..', // Your placeholder text here
+                    ),
+                    controller: _radiusController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        _radius = double.tryParse(value);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a radius value.';
+                      }
+                      double? enteredValue = double.tryParse(value);
+                      if (enteredValue == null) {
+                        return 'Invalid radius value.';
+                      }
+                      if (enteredValue > 50000) {
+                        return 'Value must be less than or equal to 50,000.';
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode
+                        .onUserInteraction, // Autovalidate on user interaction
+                  )),
             ],
           ),
         ),
