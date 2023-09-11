@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:travel_point/src/features/map/data/models/place_model.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
@@ -54,6 +55,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(const LoadingMapState(loadingMessage: 'Loading nearby places..'));
     CameraPosition? cameraPosition;
     Set<Marker> markers = {};
+    List<PlaceModel> places = [];
+
 
     final resultCurrentLocation = await _getUserCurrentLocationUsecase();
 
@@ -94,6 +97,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                     infoWindow: InfoWindow(title: result.name ?? ""),
                   ),
                 );
+
+                final place = PlaceModel(
+                  name: result.name!,
+                  rating: result.rating,
+                  lat: result.geometry!.location!.lat ?? 0.0,
+                  lng: result.geometry!.location!.lng ?? 0.0,
+                  userRatingsTotal: result.userRatingsTotal,
+                  placeId: result.placeId ?? '',
+                );
+
+                places.add(place);
               }
             }
           }
@@ -106,9 +120,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           );
 
           markers.add(currentLocationMarker);
+          print("Places: " + places[0].name);
 
           emit(
-              ResultMapState(markers: markers, cameraPosition: cameraPosition));
+              ResultMapState(markers: markers, cameraPosition: cameraPosition, places: places));
         },
       );
     });

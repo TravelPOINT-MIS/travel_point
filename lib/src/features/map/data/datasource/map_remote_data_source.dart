@@ -64,7 +64,7 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
       required List<PlaceType> types}) async {
     List<NearbyPlacesResponse> responses = [];
     NearbyPlacesResponse combinedResponse = NearbyPlacesResponse(
-        results: []); // Initialize an empty response object
+        results: []);
 
     try {
       for (PlaceType type in types) {
