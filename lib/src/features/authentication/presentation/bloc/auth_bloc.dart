@@ -68,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _loginWithGoogleHandler(
       LoginWithGoogleAuthEvent event, Emitter<AuthState> emitter) async {
-    emit(const LoadingAuthState(loadingMessage: 'Setting google account..'));
+    emit(const LoadingAuthState(loadingMessage: 'Setting up google account..'));
 
     final result = await _loginUserWithGoogleUsecase();
 
