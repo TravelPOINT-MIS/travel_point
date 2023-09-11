@@ -108,8 +108,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             onPressed: () => handleLogIn(context),
             child: const Text(
-              'Log in',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+              'LOGIN',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
             ),
           ),
           const Text('or'),
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
             Buttons.Google,
             elevation: 1,
             onPressed: loginWithGoogle,
-            text: "Log in with Google",
+            text: "LOGIN with Google",
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Log In"),
+        title: const Text("Login"),
         centerTitle: true,
       ),
       body: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {

@@ -139,10 +139,10 @@ class _SignUpPageState extends State<SignUpPage> {
               child: TextButton(
                 onPressed: () => handleSignUpUser(context),
                 child: const Text(
-                  'Sign Up',
+                  'SIGNUP',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.normal),
                 ),
               ),
@@ -151,11 +151,11 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const Text('Already have an account? '),
+                const Text('Already have an account?'),
                 TextButton(
                   onPressed: handleNavigateLoginPage,
                   child: const Text(
-                    'Log In',
+                    'Login',
                     style: TextStyle(color: Colors.redAccent),
                   ),
                 ),
@@ -171,7 +171,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Sign Up"),
+          title: const Text("Signup"),
           centerTitle: true,
         ),
         body: BlocBuilder<AuthBloc, AuthState>(
