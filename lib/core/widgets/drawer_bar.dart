@@ -68,21 +68,22 @@ class _DrawerMenuState extends State<DrawerMenu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-              ),
-              child: Image(image: ResizeImage(AssetImage('assets/logo.png'), width: 120, height: 120))
-              
-            ),
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
+                child: const Image(
+                    image: ResizeImage(AssetImage('assets/logo.png'),
+                        width: 120, height: 120))),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profile'),
               onTap: () {
-                Navigator.push(context,
-                MaterialPageRoute(builder: (context)=>const UserInfoPage()),
-            );
-            },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UserInfoPage()),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.logout),
