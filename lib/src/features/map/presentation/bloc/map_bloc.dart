@@ -16,11 +16,29 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
     on<GetCurrentLocationNearbyPlacesEvent>(_getCurrentNearbyPlacesHandler);
     on<ClearMarkersEvent>(_handleClearMarkers);
+    on<ToggleSidebarEvent>(_toggleSidebarHandler);
+
   }
 
   Future<void> _handleClearMarkers(
       ClearMarkersEvent event, Emitter<MapState> emitter) async {
     emit(InitialMapState(cameraPosition: event.keepSameCameraPosition));
+  }
+
+  void _toggleSidebarHandler(ToggleSidebarEvent event, Emitter<MapState> emitter) {
+    if (state is ResultMapState) {
+      final currentState = state as ResultMapState;
+      final newSidebarState = !currentState.isSidebarOpen!;
+
+      final updatedState = ResultMapState(
+        markers: currentState.markers,
+        cameraPosition: currentState.cameraPosition,
+        places: currentState.places,
+        isSidebarOpen: newSidebarState,
+      );
+
+      emit(updatedState);
+    }
   }
 
   Future<void> _getUserCurrentLocationHandler(
@@ -123,7 +141,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           emit(ResultMapState(
               markers: markers,
               cameraPosition: cameraPosition,
-              places: places));
+              places: places,
+              isSidebarOpen: true));
         },
       );
     });

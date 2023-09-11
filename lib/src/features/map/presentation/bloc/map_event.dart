@@ -28,3 +28,6 @@ class ClearMarkersEvent extends MapEvent {
   final CameraPosition? keepSameCameraPosition;
   const ClearMarkersEvent({this.keepSameCameraPosition});
 }
+
+class ToggleSidebarEvent extends MapEvent {}
+

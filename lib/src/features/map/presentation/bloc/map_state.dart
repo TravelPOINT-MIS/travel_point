@@ -6,21 +6,24 @@ abstract class MapState extends Equatable {
   final CameraPosition cameraPosition;
   final Set<Marker> markers;
   final List<PlaceModel> places;
+  final bool? isSidebarOpen;
 
   const MapState(
       {Set<Marker>? markers,
       CameraPosition? cameraPosition,
-      List<PlaceModel>? places})
+      List<PlaceModel>? places,
+      bool? isSidebarOpen})
       : markers = markers ?? const {},
         cameraPosition = cameraPosition ??
             const CameraPosition(
               target: LatLng(41.555418, 22.349499),
               zoom: 7,
             ),
-        places = places ?? const [];
+        places = places ?? const [],
+        isSidebarOpen = isSidebarOpen ?? false;
 
   @override
-  List<Object?> get props => [markers, cameraPosition, places];
+  List<Object?> get props => [markers, cameraPosition, places, isSidebarOpen];
 }
 
 class InitialMapState extends MapState {
@@ -35,7 +38,8 @@ class LoadingMapState extends MapState {
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState({super.markers, super.cameraPosition, super.places});
+  const ResultMapState(
+      {super.markers, super.cameraPosition, super.places, super.isSidebarOpen});
 }
 
 class ErrorMapState extends MapState {
