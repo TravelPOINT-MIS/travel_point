@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/type/type_def.dart';
 import 'package:travel_point/core/widgets/error_snackbar.dart';
+import 'package:travel_point/core/widgets/location_type_select.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
@@ -32,21 +33,19 @@ class _MapPageState extends State<MapPage> {
     mapBloc.add(mapEvent);
   }
 
-  void handleCurrentLocationNearbyPlacesClick(context) {
-    final mapBloc = BlocProvider.of<MapBloc>(context);
-    const mapEvent = GetCurrentLocationNearbyPlacesEvent(
-        radius: 10000, types: [PlaceType.bar]);
-    mapBloc.add(mapEvent);
-    // ERROR - TO BE FIXED
-    // showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return LocationTypeSelectionDialog(
-    //         onTypesSelected: (selectedTypes) {
-    //
-    //         },
-    //       );
-    //     });
+  void handleCurrentLocationNearbyPlacesClick(mapContext) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return LocationTypeSelectionDialog(
+            onTypesSelected: (selectedTypes) {
+              final mapBloc = BlocProvider.of<MapBloc>(mapContext);
+              final mapEvent = GetCurrentLocationNearbyPlacesEvent(
+                  radius: 10000, types: selectedTypes);
+              mapBloc.add(mapEvent);
+            },
+          );
+        });
   }
 
   void updateCameraPosition(CameraPosition cameraPosition) {
@@ -56,7 +55,7 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  Widget defaultScreen(MapState state) {
+  Widget defaultScreen(MapState state, mapContext) {
     return AbsorbPointer(
       absorbing: state is LoadingMapState,
       child: Scaffold(
@@ -93,7 +92,7 @@ class _MapPageState extends State<MapPage> {
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
                         onPressed: () =>
-                            handleCurrentLocationNearbyPlacesClick(context),
+                            handleCurrentLocationNearbyPlacesClick(mapContext),
                         label: const Text("Get Nearby Places"),
                         icon: const Icon(Icons.place),
                       )
@@ -108,7 +107,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MapBloc, MapState>(builder: (_, state) {
+    return BlocBuilder<MapBloc, MapState>(builder: (mapContext, state) {
       if (state is ResultMapState) {
         updateCameraPosition(state.cameraPosition);
       }
@@ -117,7 +116,7 @@ class _MapPageState extends State<MapPage> {
         children: [
           AbsorbPointer(
             absorbing: state is LoadingMapState,
-            child: defaultScreen(state),
+            child: defaultScreen(state, mapContext),
           ),
           if (state is LoadingMapState)
             const AlertDialog(
