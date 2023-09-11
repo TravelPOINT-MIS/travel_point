@@ -69,7 +69,8 @@ class _MapPageState extends State<MapPage> {
             _googleMapController = controller;
           },
         ),
-        floatingActionButton: Padding(
+        floatingActionButton: widget.activeMapPageTab == MapPageType.NearByMap
+            ? Padding(
           padding: const EdgeInsets.only(left: 30.0),
           child: Align(
             alignment: Alignment.bottomLeft,
@@ -77,30 +78,27 @@ class _MapPageState extends State<MapPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.activeMapPageTab == MapPageType.ExploreMap
-                    ? FloatingActionButton.extended(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        onPressed: handleCurrentLocationClick,
-                        label: const Text("Current location"),
-                        icon: const Icon(Icons.location_history),
-                      )
-                    : const Center(),
+                FloatingActionButton.extended(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  onPressed: handleCurrentLocationClick,
+                  label: const Text("Current location"),
+                  icon: const Icon(Icons.location_history),
+                ),
                 const SizedBox(height: 16),
-                widget.activeMapPageTab == MapPageType.FindHomeMap
-                    ? FloatingActionButton.extended(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        onPressed: () =>
-                            handleCurrentLocationNearbyPlacesClick(mapContext),
-                        label: const Text("Get Nearby Places"),
-                        icon: const Icon(Icons.place),
-                      )
-                    : const Center(),
+                FloatingActionButton.extended(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  onPressed: () =>
+                      handleCurrentLocationNearbyPlacesClick(mapContext),
+                  label: const Text("Get Nearby Places"),
+                  icon: const Icon(Icons.place),
+                ),
               ],
             ),
           ),
-        ),
+        )
+            : const Center(),
       ),
     );
   }
