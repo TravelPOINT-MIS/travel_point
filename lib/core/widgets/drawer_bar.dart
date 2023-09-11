@@ -68,13 +68,16 @@ class _DrawerMenuState extends State<DrawerMenu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: const Image(
-                    image: ResizeImage(AssetImage('assets/logo.png'),
-                        width: 120, height: 120))),
+            UserAccountsDrawerHeader(
+              accountEmail: const Text('jane.doe@example.com'),
+              accountName: const Text(
+                'Jane Doe',
+                style: TextStyle(fontSize: 24.0),
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profile'),
@@ -85,10 +88,16 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 );
               },
             ),
+            const Divider(
+              thickness: 0.7,
+            ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log out'),
               onTap: () => handleLogout(context),
+            ),
+            const Divider(
+              thickness: 1,
             ),
           ],
         ),
