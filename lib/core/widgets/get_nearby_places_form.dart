@@ -18,7 +18,7 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
   final List<PlaceType> _selectedTypes = [];
   String _searchQuery = "";
   bool _isOKButtonEnabled = false;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Add form key
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _radiusController = TextEditingController();
   double? _radius;
 
@@ -45,109 +45,6 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    List<Step> steps = [
-      Step(
-        title: const Text('Select place type: '),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Search..',
-                  border: InputBorder.none,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
-                },
-              ),
-            ),
-            SizedBox(
-                height: 300.0,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: getFilteredTypes().map((type) {
-                            return CheckboxListTile(
-                              controlAffinity: ListTileControlAffinity.leading,
-                              title: Text(formatLocationTypeName(type.name)),
-                              value: _selectedTypes.contains(type),
-                              onChanged: (selected) {
-                                setState(() {
-                                  if (selected!) {
-                                    _selectedTypes.add(type);
-                                  } else {
-                                    _selectedTypes.remove(type);
-                                  }
-                                  _updateOKButtonState();
-                                });
-                              },
-                              activeColor: Theme.of(context).primaryColor,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ))
-          ],
-        ),
-        isActive: true,
-      ),
-      Step(
-        title: const Text('Enter distance radius: '),
-        content: Form(
-          key: _formKey, // Assign the form key
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Enter Radius:'),
-              Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  // Add bottom padding
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText:
-                          'Distance in meters..', // Your placeholder text here
-                    ),
-                    controller: _radiusController,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        _radius = double.tryParse(value);
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a radius value.';
-                      }
-                      double? enteredValue = double.tryParse(value);
-                      if (enteredValue == null) {
-                        return 'Invalid radius value.';
-                      }
-                      if (enteredValue > 50000) {
-                        return 'Value must be less than or equal to 50,000.';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode
-                        .onUserInteraction, // Autovalidate on user interaction
-                  )),
-            ],
-          ),
-        ),
-        isActive:
-            _currentStep == 1, // Make this step active only when it's reached
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search Nearby Places'),
@@ -161,19 +58,14 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
         },
         onStepContinue: () {
           if (_currentStep == 0) {
-            // Check if Step 1 is completed (at least one place type selected)
             if (!_isOKButtonEnabled) {
-              // Handle the case when the "Continue" button is pressed on Step 1 without selecting any place types.
-              // You can display an error message or take any other action.
             } else {
               setState(() {
                 _currentStep++;
               });
             }
           } else if (_currentStep == 1) {
-            // Check if the form is valid (including radius validation)
-            if (_formKey.currentState!.validate()) {
-              // Call the callback to send back the data to the parent widget.
+            if (_formKey.currentState!.validate() && _isOKButtonEnabled) {
               widget.onTypesSelected(_selectedTypes, _radius);
             }
           }
@@ -189,7 +81,101 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
             });
           }
         },
-        steps: steps,
+        steps: [
+          Step(
+            title: const Text('Select place type: '),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Search..',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 300.0,
+                  child: ListView(
+                    children: getFilteredTypes().map((type) {
+                      return CheckboxListTile(
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text(formatLocationTypeName(type.name)),
+                        value: _selectedTypes.contains(type),
+                        onChanged: (selected) {
+                          setState(() {
+                            if (selected!) {
+                              _selectedTypes.add(type);
+                            } else {
+                              _selectedTypes.remove(type);
+                            }
+                            _updateOKButtonState();
+                          });
+                        },
+                        activeColor: Theme.of(context).primaryColor,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            isActive: true,
+          ),
+          Step(
+            title: const Text('Enter distance radius: '),
+            content: Builder(
+              builder: (BuildContext formContext) {
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Enter Radius:'),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: 'Distance in meters..',
+                          ),
+                          controller: _radiusController,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              _radius = double.tryParse(value);
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a radius value.';
+                            }
+                            double? enteredValue = double.tryParse(value);
+                            if (enteredValue == null) {
+                              return 'Invalid radius value.';
+                            }
+                            if (enteredValue > 50000) {
+                              return 'Value must be less than or equal to 50,000.';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            isActive: _selectedTypes
+                .isNotEmpty, // Step 2 is active only if place types are selected
+          ),
+        ],
       ),
     );
   }

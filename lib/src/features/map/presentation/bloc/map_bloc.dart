@@ -16,29 +16,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
     on<GetCurrentLocationNearbyPlacesEvent>(_getCurrentNearbyPlacesHandler);
     on<ClearMarkersEvent>(_handleClearMarkers);
-    on<ToggleSidebarEvent>(_toggleSidebarHandler);
-
+    on<ClearResultMapStateEvent>(_clearResultMapStateEvent);
   }
 
   Future<void> _handleClearMarkers(
       ClearMarkersEvent event, Emitter<MapState> emitter) async {
     emit(InitialMapState(cameraPosition: event.keepSameCameraPosition));
-  }
-
-  void _toggleSidebarHandler(ToggleSidebarEvent event, Emitter<MapState> emitter) {
-    if (state is ResultMapState) {
-      final currentState = state as ResultMapState;
-      final newSidebarState = !currentState.isSidebarOpen!;
-
-      final updatedState = ResultMapState(
-        markers: currentState.markers,
-        cameraPosition: currentState.cameraPosition,
-        places: currentState.places,
-        isSidebarOpen: newSidebarState,
-      );
-
-      emit(updatedState);
-    }
   }
 
   Future<void> _getUserCurrentLocationHandler(
@@ -116,13 +99,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                 );
 
                 final place = PlaceModel(
-                  name: result.name!,
-                  rating: result.rating,
-                  lat: result.geometry!.location!.lat ?? 0.0,
-                  lng: result.geometry!.location!.lng ?? 0.0,
-                  userRatingsTotal: result.userRatingsTotal,
-                  placeId: result.placeId ?? '',
-                );
+                    name: result.name!,
+                    rating: result.rating,
+                    lat: result.geometry!.location!.lat ?? 0.0,
+                    lng: result.geometry!.location!.lng ?? 0.0,
+                    userRatingsTotal: result.userRatingsTotal,
+                    placeId: result.placeId ?? '',
+                    photos: result.photos,
+                    openingHours: result.openingHours,
+                    types: result.types);
 
                 places.add(place);
               }
@@ -141,10 +126,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           emit(ResultMapState(
               markers: markers,
               cameraPosition: cameraPosition,
-              places: places,
-              isSidebarOpen: true));
+              places: places));
         },
       );
     });
+  }
+
+  Future<void> _clearResultMapStateEvent(
+      ClearResultMapStateEvent event, Emitter<MapState> emitter) async {
+    emit(InitialMapState(
+      markers: state.markers,
+      cameraPosition: state.cameraPosition,
+      places: state.places,
+    ));
   }
 }
