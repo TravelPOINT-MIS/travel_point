@@ -16,8 +16,8 @@ abstract class MapState extends Equatable {
       : markers = markers ?? const {},
         cameraPosition = cameraPosition ??
             const CameraPosition(
-              target: LatLng(41.555418, 22.349499),
-              zoom: 7,
+              target: LatLng(41.555418, 21.77),
+              zoom: 7.7,
             ),
         places = places ?? const [],
         isSidebarOpen = isSidebarOpen ?? false;
