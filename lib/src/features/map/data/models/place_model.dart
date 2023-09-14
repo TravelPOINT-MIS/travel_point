@@ -1,4 +1,4 @@
-import 'package:travel_point/src/model/nearby_places_response.dart';
+import 'package:travel_point/src/features/map/data/models/nearby_places_response.dart';
 
 class PlaceModel {
   final String name;

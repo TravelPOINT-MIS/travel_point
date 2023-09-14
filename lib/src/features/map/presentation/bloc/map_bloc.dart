@@ -5,7 +5,7 @@ import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.d
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
-import 'package:travel_point/src/model/nearby_places_response.dart';
+import 'package:travel_point/src/features/map/data/models/nearby_places_response.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final GetUserCurrentLocationUsecase _getUserCurrentLocationUsecase;

@@ -5,7 +5,7 @@ import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
 import 'package:travel_point/core/type/type_def.dart';
 import 'package:http/http.dart' as http;
-import 'package:travel_point/src/model/nearby_places_response.dart';
+import 'package:travel_point/src/features/map/data/models/nearby_places_response.dart';
 
 abstract class MapRemoteDataSource {
   Future<Position> getCurrentLocation();

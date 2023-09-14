@@ -5,7 +5,7 @@ import 'package:travel_point/core/errors/failure.dart';
 import 'package:travel_point/core/type/type_def.dart';
 import 'package:travel_point/src/features/map/data/datasource/map_remote_data_source.dart';
 import 'package:travel_point/src/features/map/domain/repository/map_repository.dart';
-import 'package:travel_point/src/model/nearby_places_response.dart';
+import 'package:travel_point/src/features/map/data/models/nearby_places_response.dart';
 
 class MapRepositoryImpl implements MapRepository {
   const MapRepositoryImpl(this._remoteDataSource);
