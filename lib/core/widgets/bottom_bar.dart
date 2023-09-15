@@ -31,7 +31,9 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
   void _onItemTapped(int item) {
     MapPageType mapPageType = _bottomBarItems.keys.elementAt(item);
 
-    return widget.onItemTapped(mapPageType);
+    if (mapPageType != widget.activeMapTab) {
+      return widget.onItemTapped(mapPageType);
+    }
   }
 
   int getIndex(MapPageType mapPageType) {

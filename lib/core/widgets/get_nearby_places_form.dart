@@ -91,7 +91,7 @@ class _NearbyPlacesFormDialogState extends State<NearbyPlacesFormDialog> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextField(
                     decoration: const InputDecoration(
-                      labelText: 'Search..',
+                      hintText: 'Search..',
                       border: InputBorder.none,
                     ),
                     onChanged: (value) {

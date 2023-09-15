@@ -29,6 +29,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _handleClearMarkers(
       ClearMarkersEvent event, Emitter<MapState> emitter) async {
+    emit(const LoadingMapState());
+
     emit(InitialMapState(cameraPosition: event.keepSameCameraPosition));
   }
 
