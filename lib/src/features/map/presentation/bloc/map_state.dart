@@ -1,15 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:travel_point/src/features/map/data/models/distance_matrix_response.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
 
 abstract class MapState extends Equatable {
+  final DistanceMatrixResponse? distanceMatrixResponse;
   final CameraPosition cameraPosition;
   final Set<Marker> markers;
   final List<PlaceModel> places;
 
   const MapState(
-      {Set<Marker>? markers,
+      {this.distanceMatrixResponse,
+      Set<Marker>? markers,
       CameraPosition? cameraPosition,
       List<PlaceModel>? places})
       : markers = markers ?? const {},
@@ -46,7 +49,11 @@ class LoadingMapState extends MapState {
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState({super.markers, super.cameraPosition, super.places});
+  const ResultMapState(
+      {super.distanceMatrixResponse,
+      super.markers,
+      super.cameraPosition,
+      super.places});
 }
 
 class ErrorMapState extends MapState {
@@ -58,4 +65,12 @@ class ErrorMapState extends MapState {
   @override
   List<Object?> get props =>
       [errorMessage, errorCode, super.markers, super.cameraPosition];
+}
+
+class ResultDistanceMatrixState extends MapState {
+  const ResultDistanceMatrixState(
+      {super.distanceMatrixResponse,
+      super.markers,
+      super.cameraPosition,
+      super.places});
 }

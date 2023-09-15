@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
+import 'package:travel_point/src/features/map/domain/usecase/get_distance_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_search_autocomplete_predictions.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
@@ -11,16 +13,18 @@ import 'package:travel_point/src/features/map/data/models/nearby_places_response
 class MapBloc extends Bloc<MapEvent, MapState> {
   final GetUserCurrentLocationUsecase _getUserCurrentLocationUsecase;
   final GetNearbyPlacesUsecase _getNearbyPlacesUsecase;
+  final GetDistanceForNearbyPlacesUsecase _getDistanceForNearbyPlaces;
   final GetSearchAutocompleteUsecase _getPredictionsFromAutocompleteUseCase;
 
   MapBloc(this._getUserCurrentLocationUsecase, this._getNearbyPlacesUsecase,
-      this._getPredictionsFromAutocompleteUseCase)
+      this._getDistanceForNearbyPlaces, this._getPredictionsFromAutocompleteUseCase)
       : super(const InitialMapState()) {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
     on<GetCurrentLocationNearbyPlacesEvent>(_getCurrentNearbyPlacesHandler);
     on<ClearMarkersEvent>(_handleClearMarkers);
     on<ClearResultMapStateEvent>(_clearResultMapStateEvent);
     on<GetPredictionsFromAutocompleteEvent>(_getautocompletePredictionsHandler);
+    on<GetDistanceForNearbyPlacesEvent>(_handleGetDistanceForNearbyPlaces);
   }
 
   Future<void> _handleClearMarkers(
@@ -43,7 +47,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           target: LatLng(position.latitude, position.longitude), zoom: 12);
 
       final currentLocationMarker = Marker(
-        markerId: const MarkerId('current-position-id'),
+        markerId: const MarkerId(CURRENT_MARKER_ID),
         position: LatLng(position.latitude, position.longitude),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       );
@@ -119,7 +123,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           }
 
           final currentLocationMarker = Marker(
-            markerId: const MarkerId('current-position-id'),
+            markerId: const MarkerId(CURRENT_MARKER_ID),
             position: LatLng(position.latitude, position.longitude),
             icon:
                 BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
@@ -159,4 +163,36 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     );
   }
 
+
+  Future<void> _handleGetDistanceForNearbyPlaces(
+      GetDistanceForNearbyPlacesEvent event, Emitter<MapState> emitter) async {
+    final Set<Marker> markersShownOnMap = state.markers;
+    final List<PlaceModel> nearbyPlaces = state.places;
+    final CameraPosition cameraPosition = state.cameraPosition;
+
+    emit(const LoadingMapState(
+        loadingMessage: 'Getting distance for nearby places..'));
+
+    final LatLng currentLocation = markersShownOnMap
+        .firstWhere(
+            (marker) => marker.markerId == const MarkerId(CURRENT_MARKER_ID))
+        .position;
+
+    final result = await _getDistanceForNearbyPlaces(
+        GetDistanceNearbyPlacesParams(
+            destinationAddresses: nearbyPlaces,
+            originAddress: currentLocation,
+            travelMode: event.travelMode));
+
+    result.fold(
+        (failure) =>
+            emit(ErrorMapState(failure.errorMessage, failure.errorCode)),
+        (result) {
+      emit(ResultDistanceMatrixState(
+          markers: markersShownOnMap,
+          cameraPosition: cameraPosition,
+          distanceMatrixResponse: result,
+          places: nearbyPlaces));
+    });
+  }
 }

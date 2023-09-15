@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
 import 'package:travel_point/core/type/type_def.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel_point/src/features/map/data/models/distance_matrix_response.dart';
 import 'package:travel_point/src/features/map/data/models/nearby_places_response.dart';
+import 'package:travel_point/src/features/map/data/models/place_model.dart';
 
 abstract class MapRemoteDataSource {
   Future<Position> getCurrentLocation();
@@ -18,6 +21,11 @@ abstract class MapRemoteDataSource {
 
   Future<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText});
+
+  Future<DistanceMatrixResponse> getDistanceForNearbyPlaces(
+      {required List<PlaceModel> destinationAddresses,
+      required LatLng originAddress,
+      required TravelModeEnum travelMode});
 }
 
 class MapRemoteDataSourceImpl implements MapRemoteDataSource {
@@ -72,7 +80,7 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
     try {
       for (PlaceType type in types) {
         final response = await _client.post(Uri.parse(
-            '${NEARBY_SEARCH_API}?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=${type.name}&key=$API_KEY'));
+            '$NEARBY_SEARCH_API?location=${fromPosition.latitude},${fromPosition.longitude}&radius=$radius&type=${type.name}&key=$API_KEY'));
 
         if (response.statusCode != 200 && response.statusCode != 201) {
           throw ApiException(
@@ -96,11 +104,48 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
   @override
   Future<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText}) async {
-
     final _places = GoogleMapsPlaces(apiKey: API_KEY);
 
     final response = await _places.autocomplete(searchInputText);
 
     return response.predictions;
+  }
+
+  @override
+  Future<DistanceMatrixResponse> getDistanceForNearbyPlaces(
+      {required List<PlaceModel> destinationAddresses,
+      required LatLng originAddress,
+      required TravelModeEnum travelMode}) async {
+    try {
+      final originLatLong =
+          '${originAddress.latitude},${originAddress.longitude}';
+      final destinationsLatLong = destinationAddresses
+          .map(
+              (address) => Uri.encodeComponent('${address.lat},${address.lng}'))
+          .join('|');
+
+      final response = await _client.post(Uri.parse(
+          '$DISTANCE_MATRIX_API?origins=$originLatLong&destinations=$destinationsLatLong&mode=$travelMode&key=$API_KEY'));
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ApiException(
+            errorMessage: response.body,
+            errorCode: response.statusCode.toString());
+      }
+
+      final responseBody = response.body;
+
+      final dynamic jsonBody = jsonDecode(responseBody);
+
+      DistanceMatrixResponse distanceMatrixResponse =
+          DistanceMatrixResponse.fromJson(jsonBody);
+
+      return distanceMatrixResponse;
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+          errorMessage: e.toString(), errorCode: 'error-getting-distance-data');
+    }
   }
 }

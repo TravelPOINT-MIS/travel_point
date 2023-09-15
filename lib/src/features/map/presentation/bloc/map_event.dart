@@ -32,6 +32,12 @@ class ClearMarkersEvent extends MapEvent {
 
 class ClearResultMapStateEvent extends MapEvent {}
 
+class GetDistanceForNearbyPlacesEvent extends MapEvent {
+  final TravelModeEnum travelMode;
+
+  const GetDistanceForNearbyPlacesEvent({required this.travelMode});
+}
+
 class GetPredictionsFromAutocompleteEvent extends MapEvent {
   final String inputSearchText;
 

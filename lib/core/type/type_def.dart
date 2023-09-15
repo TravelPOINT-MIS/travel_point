@@ -11,6 +11,12 @@ typedef DataMap = Map<String, dynamic>;
 
 enum MapPageType { NearByMap, ExploreMap, FindHomeMap }
 
+enum TravelModeEnum {
+  driving,
+  walking,
+  bicycling,
+}
+
 enum PlaceType {
   accounting,
   airport,
