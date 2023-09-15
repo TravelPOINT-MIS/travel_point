@@ -34,6 +34,9 @@ dependencies:
   # Map dependencies
   dio: ^5.3.2
   google_maps_flutter: ^2.0.2
+  flutter_google_places: ^0.3.0
+  google_api_headers: ^1.0.0
+  google_maps_webservice: ^0.0.19
   geolocator: ^10.0.1
   open_app_settings: ^2.0.1
 

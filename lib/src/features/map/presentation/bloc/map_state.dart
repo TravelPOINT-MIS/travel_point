@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
 
 abstract class MapState extends Equatable {
@@ -24,7 +25,17 @@ abstract class MapState extends Equatable {
 }
 
 class InitialMapState extends MapState {
-  const InitialMapState({super.markers, super.cameraPosition, super.places});
+  final List<Prediction> predictions;
+
+  const InitialMapState(
+      {super.markers,
+      super.cameraPosition,
+      super.places,
+      List<Prediction>? predictions})
+      : predictions = predictions ?? const [];
+
+  @override
+  List<Object?> get props => [predictions];
 }
 
 class LoadingMapState extends MapState {
@@ -35,8 +46,7 @@ class LoadingMapState extends MapState {
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState(
-      {super.markers, super.cameraPosition, super.places});
+  const ResultMapState({super.markers, super.cameraPosition, super.places});
 }
 
 class ErrorMapState extends MapState {

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
+import 'package:travel_point/src/features/map/domain/usecase/get_search_autocomplete_predictions.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_event.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_state.dart';
@@ -10,13 +11,16 @@ import 'package:travel_point/src/features/map/data/models/nearby_places_response
 class MapBloc extends Bloc<MapEvent, MapState> {
   final GetUserCurrentLocationUsecase _getUserCurrentLocationUsecase;
   final GetNearbyPlacesUsecase _getNearbyPlacesUsecase;
+  final GetSearchAutocompleteUsecase _getPredictionsFromAutocompleteUseCase;
 
-  MapBloc(this._getUserCurrentLocationUsecase, this._getNearbyPlacesUsecase)
+  MapBloc(this._getUserCurrentLocationUsecase, this._getNearbyPlacesUsecase,
+      this._getPredictionsFromAutocompleteUseCase)
       : super(const InitialMapState()) {
     on<GetCurrentLocationEvent>(_getUserCurrentLocationHandler);
     on<GetCurrentLocationNearbyPlacesEvent>(_getCurrentNearbyPlacesHandler);
     on<ClearMarkersEvent>(_handleClearMarkers);
     on<ClearResultMapStateEvent>(_clearResultMapStateEvent);
+    on<GetPredictionsFromAutocompleteEvent>(_getautocompletePredictionsHandler);
   }
 
   Future<void> _handleClearMarkers(
@@ -140,4 +144,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       places: state.places,
     ));
   }
+
+  Future<void> _getautocompletePredictionsHandler(
+      GetPredictionsFromAutocompleteEvent event, Emitter<MapState> emitter) async {
+    final result = await _getPredictionsFromAutocompleteUseCase(event.inputSearchText);
+
+    result.fold(
+          (failure) {
+            emit(ErrorMapState(failure.errorMessage, failure.errorCode));
+      },
+          (predictions) {
+            emit(InitialMapState(predictions: predictions));
+      },
+    );
+  }
+
 }

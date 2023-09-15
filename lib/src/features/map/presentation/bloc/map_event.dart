@@ -31,3 +31,12 @@ class ClearMarkersEvent extends MapEvent {
 }
 
 class ClearResultMapStateEvent extends MapEvent {}
+
+class GetPredictionsFromAutocompleteEvent extends MapEvent {
+  final String inputSearchText;
+
+  @override
+  List<Object?> get props => [inputSearchText];
+
+  const GetPredictionsFromAutocompleteEvent({required this.inputSearchText});
+}

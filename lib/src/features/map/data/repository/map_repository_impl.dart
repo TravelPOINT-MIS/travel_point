@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
+import 'package:google_maps_webservice/src/places.dart';
 import 'package:travel_point/core/errors/exception.dart';
 import 'package:travel_point/core/errors/failure.dart';
 import 'package:travel_point/core/type/type_def.dart';
@@ -34,6 +35,20 @@ class MapRepositoryImpl implements MapRepository {
               fromPosition: fromPosition, radius: radius, types: types);
 
       return Right(nearbyPlacesResponse);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
+
+  @override
+  ResultFuture<List<Prediction>> getPredictionsFromAutocomplete(
+      {required String searchInputText}) async {
+    try {
+      List<Prediction> predictions =
+          await _remoteDataSource.getPredictionsFromAutocomplete(
+              searchInputText: searchInputText);
+      return Right(predictions);
     } on ApiException catch (error) {
       final ApiFailure apiFailure = ApiFailure.fromApiException(error);
       return Left(apiFailure);

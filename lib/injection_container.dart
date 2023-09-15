@@ -17,6 +17,7 @@ import 'package:travel_point/src/features/map/data/datasource/map_remote_data_so
 import 'package:travel_point/src/features/map/data/repository/map_repository_impl.dart';
 import 'package:travel_point/src/features/map/domain/repository/map_repository.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
+import 'package:travel_point/src/features/map/domain/usecase/get_search_autocomplete_predictions.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_user_current_location.dart';
 import 'package:travel_point/src/features/map/presentation/bloc/map_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -65,5 +66,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<GetNearbyPlacesUsecase>(GetNearbyPlacesUsecase(sl()));
 
-  sl.registerFactory<MapBloc>(() => MapBloc(sl(), sl()));
+  sl.registerSingleton<GetSearchAutocompleteUsecase>(GetSearchAutocompleteUsecase(sl()));
+
+  sl.registerFactory<MapBloc>(() => MapBloc(sl(), sl(), sl()));
 }

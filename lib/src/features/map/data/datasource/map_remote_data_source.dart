@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:travel_point/core/constants/constants.dart';
 import 'package:travel_point/core/errors/exception.dart';
 import 'package:travel_point/core/type/type_def.dart';
@@ -14,6 +15,9 @@ abstract class MapRemoteDataSource {
       {required Position fromPosition,
       required int radius,
       required List<PlaceType> types});
+
+  Future<List<Prediction>> getPredictionsFromAutocomplete(
+      {required String searchInputText});
 }
 
 class MapRemoteDataSourceImpl implements MapRemoteDataSource {
@@ -63,8 +67,7 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
       required int radius,
       required List<PlaceType> types}) async {
     List<NearbyPlacesResponse> responses = [];
-    NearbyPlacesResponse combinedResponse = NearbyPlacesResponse(
-        results: []);
+    NearbyPlacesResponse combinedResponse = NearbyPlacesResponse(results: []);
 
     try {
       for (PlaceType type in types) {
@@ -88,5 +91,16 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
       throw ApiException(
           errorMessage: e.toString(), errorCode: 'error-fetching-data');
     }
+  }
+
+  @override
+  Future<List<Prediction>> getPredictionsFromAutocomplete(
+      {required String searchInputText}) async {
+
+    final _places = GoogleMapsPlaces(apiKey: API_KEY);
+
+    final response = await _places.autocomplete(searchInputText);
+
+    return response.predictions;
   }
 }
