@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
@@ -68,16 +69,51 @@ class _DrawerMenuState extends State<DrawerMenu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountEmail: const Text('jane.doe@example.com'),
-              accountName: const Text(
-                'Jane Doe',
-                style: TextStyle(fontSize: 24.0),
-              ),
+            // UserAccountsDrawerHeader(
+            //   accountEmail: const Text('jane.doe@example.com'),
+            //   accountName: const Text(
+            //     'Jane Doe',
+            //     style: TextStyle(fontSize: 24.0),
+            //   ),
+            //   decoration: BoxDecoration(
+            //     color: Theme.of(context).primaryColor,
+            //   ),
+            // ),
+            // UserAccountsDrawerHeader(
+            //   accountEmail: Text(FirebaseAuth.instance.currentUser?.email ?? 'Display Email: N/A',),
+            //   accountName: Text('User'),
+            // ),
+            DrawerHeader(
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
               ),
-            ),
+              padding: const EdgeInsets.only(top: 60, left: 10,bottom: 0),
+                child: Column(
+
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: 
+                  [
+                    const Row(
+                      children:[
+                      Icon(Icons.person,color: Colors.black54, size: 20,),
+                    const Text('User:',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.black54)),
+                    
+                    ]),
+
+                    Text(FirebaseAuth.instance.currentUser?.email ?? 'Display Email: N/A',
+              style: const TextStyle(fontSize: 16,color: Colors.black54),
+              ),
+              FirebaseAuth.instance.currentUser?.emailVerified == false
+                            ? TextButton(
+                                onPressed: () => handleEmailVerify(context),
+                                child: const Text('Verify email!',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(color: Colors.white)),
+                              )
+                            : const Text('')]),
+                            ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profile'),
