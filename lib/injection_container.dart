@@ -8,6 +8,7 @@ import 'package:travel_point/src/features/authentication/data/repository/auth_re
 import 'package:travel_point/src/features/authentication/domain/repository/auth_repository.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/check_email_verify_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/email_verify_user.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/get_current_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user_with_google.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/logout_user.dart';
@@ -60,8 +61,10 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<EmailVerifyUserUsecase>(EmailVerifyUserUsecase(sl()));
 
+  sl.registerSingleton<GetUserUsecase>(GetUserUsecase(sl()));
+
   sl.registerFactory<AuthBloc>(
-      () => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+      () => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 
   sl.registerSingleton<GetUserCurrentLocationUsecase>(
       GetUserCurrentLocationUsecase(sl()));

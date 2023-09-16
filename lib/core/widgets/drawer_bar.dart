@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
@@ -9,7 +8,9 @@ import 'package:travel_point/src/features/authentication/presentation/bloc/auth_
 import 'package:travel_point/src/features/authentication/presentation/views/userInfo_page.dart';
 
 class DrawerMenu extends StatefulWidget {
-  const DrawerMenu({Key? key}) : super(key: key);
+  final UserEntity? userData;
+
+  const DrawerMenu({Key? key, required this.userData}) : super(key: key);
 
   @override
   _DrawerMenuState createState() => _DrawerMenuState();
@@ -69,71 +70,66 @@ class _DrawerMenuState extends State<DrawerMenu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            // UserAccountsDrawerHeader(
-            //   accountEmail: const Text('jane.doe@example.com'),
-            //   accountName: const Text(
-            //     'Jane Doe',
-            //     style: TextStyle(fontSize: 24.0),
-            //   ),
-            //   decoration: BoxDecoration(
-            //     color: Theme.of(context).primaryColor,
-            //   ),
-            // ),
-            // UserAccountsDrawerHeader(
-            //   accountEmail: Text(FirebaseAuth.instance.currentUser?.email ?? 'Display Email: N/A',),
-            //   accountName: Text('User'),
-            // ),
-            DrawerHeader(
+            UserAccountsDrawerHeader(
+              accountEmail: Text(widget.userData?.email ?? ''),
+              accountName: Text(widget.userData?.displayName ?? '',
+                  style: const TextStyle(fontSize: 24.0)),
+              onDetailsPressed: () {},
+              currentAccountPicture: const SizedBox(
+                width: 50,
+                height: 50,
+                child: Image(
+                  image: AssetImage('assets/logo.png'),
+                  fit: BoxFit.fill, // You can adjust the fit as needed
+                ),
+              ),
+              otherAccountsPictures: [
+                widget.userData?.googleUser == true
+                    ? const Text(
+                        'Google user',
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      )
+                    : const Text(
+                        'App user',
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+              ],
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
               ),
-              padding: const EdgeInsets.only(top: 60, left: 10,bottom: 0),
-                child: Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: 
-                  [
-                    const Row(
-                      children:[
-                      Icon(Icons.person,color: Colors.black54, size: 20,),
-                    const Text('User:',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black54)),
-                    
-                    ]),
-
-                    Text(FirebaseAuth.instance.currentUser?.email ?? 'Display Email: N/A',
-              style: const TextStyle(fontSize: 16,color: Colors.black54),
-              ),
-              FirebaseAuth.instance.currentUser?.emailVerified == false
-                            ? TextButton(
-                                onPressed: () => handleEmailVerify(context),
-                                child: const Text('Verify email!',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(color: Colors.white)),
-                              )
-                            : const Text('')]),
-                            ),
+              // padding: const EdgeInsets.only(top: 60, left: 10, bottom: 0),
+              // child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       FirebaseAuth.instance.currentUser?.emailVerified == false
+              //           ? TextButton(
+              //               onPressed: () => handleEmailVerify(context),
+              //               child: const Text('Verify email!',
+              //                   textAlign: TextAlign.left,
+              //                   style: TextStyle(color: Colors.white)),
+              //             )
+              //           : const Text('')
+              //     ]),
+            ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profile'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const UserInfoPage()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          UserInfoPage(userEntity: widget.userData)),
                 );
               },
             ),
             const Divider(
-              thickness: 0.7,
+              thickness: 1,
             ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log out'),
               onTap: () => handleLogout(context),
-            ),
-            const Divider(
-              thickness: 1,
             ),
           ],
         ),

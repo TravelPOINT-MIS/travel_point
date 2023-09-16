@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_point/injection_container.dart';
@@ -9,19 +9,20 @@ import 'package:travel_point/src/features/authentication/presentation/bloc/auth_
 import 'package:travel_point/src/features/authentication/presentation/bloc/auth_state.dart';
 
 class UserInfoPage extends StatefulWidget {
-  const UserInfoPage({Key? key}) : super(key: key);
+  final UserEntity? userEntity;
+
+  const UserInfoPage({Key? key, this.userEntity}) : super(key: key);
 
   @override
   _UserInfoPageState createState() => _UserInfoPageState();
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
-  UserEntity? userData;
   String? error;
   bool hideVerifyEmail = false;
   Timer? timer;
-  
- void checkEmailVerification(BuildContext context) {
+
+  void checkEmailVerification(BuildContext context) {
     timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
 
@@ -53,88 +54,81 @@ class _UserInfoPageState extends State<UserInfoPage> {
   Widget build(BuildContext context) {
     Widget defaultScreen(AuthState state) {
       return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
-      body: error == null?
-      Column(
-        
-        //review first then delete commented text
-                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 20),
-                        const Icon(Icons.person,size: 100,color: Colors.black54,),
-                        const SizedBox(height: 20),
-                        Text(
-                          //userData?.displayName ?? 'Display Name: N/A',
-                          FirebaseAuth.instance.currentUser?.email ?? 'Display Name: N/A',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54
-                            
-                          ),
-                          
+          appBar: AppBar(
+            title: const Text('Profile'),
+            centerTitle: true,
+          ),
+          body: Column(
+            //review first then delete commented text
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+              const Icon(
+                Icons.person,
+                size: 100,
+                color: Colors.black54,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                widget.userEntity?.displayName ?? 'Display Name: N/A',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                widget.userEntity?.dateCreated != null
+                    ? 'Date Created: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(widget.userEntity!.dateCreated.toDate())}'
+                    : 'Date Created: N/A',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                widget.userEntity?.dateModified != null
+                    ? 'Date Modified: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(widget.userEntity!.dateModified!.toDate())}'
+                    : 'Date Modified: N/A',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Email verified: ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  widget.userEntity?.emailVerified == true
+                      ? Icon(
+                          Icons.check,
+                          size: 15,
+                          color: Theme.of(context).primaryColor,
+                        )
+                      : Icon(
+                          Icons.close,
+                          size: 15,
+                          color: Theme.of(context).primaryColor,
                         ),
-                        const SizedBox(height: 20),
-                        // Text(
-                        //   userData?.dateCreated != null
-                        //       ? 'Date Created: ${userData!.dateCreated.toDate().toIso8601String()}'
-                        //       : 'Date Created: N/A',
-                        //   textAlign: TextAlign.center,
-                        //   style: const TextStyle(fontSize: 14),
-                        // ),
-                        // const SizedBox(height: 20),
-                        // Text(
-                        //   userData?.dateModified != null
-                        //       ? 'Date Modified: ${userData!.dateModified!.toDate().toIso8601String()}'
-                        //       : 'Date Modified: N/A',
-                        //   textAlign: TextAlign.center,
-                        //   style: const TextStyle(fontSize: 14),
-                        // ),
-                        // const SizedBox(height: 20),
-                        // Text(
-                        //   FirebaseAuth.instance.currentUser?.emailVerified==true ? Icon
-                        //   textAlign: TextAlign.center,
-                        //   style: const TextStyle(fontSize: 14,color: Colors.black54),
-                        // ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            Text('Email verified: ',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black54),
-                            ),
-                            FirebaseAuth.instance.currentUser?.emailVerified==true ? Icon(Icons.check,color: Colors.green,):Icon(Icons.close,color: Colors.red,),
-],
-),
-                        // FirebaseAuth.instance.currentUser?.emailVerified == false
-                        //     ? TextButton(
-                        //         onPressed: () => handleEmailVerify(context),
-                        //         child: const Text('Verify email!',
-                        //             textAlign: TextAlign.center,
-                        //             style: TextStyle(color: Colors.redAccent)),
-                        //       )
-                        //     : const Text('')
-                      ],
-                    ): Text(error ?? 'error'),
-      );
+                ],
+              ),
+            ],
+          ));
     }
-        return BlocProvider<AuthBloc>(
-          create: (context) => sl(),
-          //child: BlocBuilder<AuthBloc, AuthState>(builder: (authContext, state) {
-          child: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
 
-      if (state is CheckEmailVerifyState) {
-        if (state.isEmailVerified) {
-          timer?.cancel();
-        }
-      }
+    return BlocProvider<AuthBloc>(
+        create: (context) => sl(),
+        child: BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
+          if (state is CheckEmailVerifyState) {
+            if (state.isEmailVerified) {
+              timer?.cancel();
+            }
+          }
 
-      return defaultScreen(state);
-    })
-        );
+          return defaultScreen(state);
+        }));
   }
 }

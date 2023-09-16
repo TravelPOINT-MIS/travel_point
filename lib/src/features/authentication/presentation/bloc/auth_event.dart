@@ -49,3 +49,7 @@ class CheckEmailVerifyUserAuthEvent extends AuthEvent {
 class EmailVerifyUserAuthEvent extends AuthEvent {
   const EmailVerifyUserAuthEvent();
 }
+
+class GetCurrentUserAuthEvent extends AuthEvent {
+  const GetCurrentUserAuthEvent();
+}

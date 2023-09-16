@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:travel_point/src/features/authentication/domain/entity/user.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -39,4 +40,17 @@ class CheckEmailVerifyState extends AuthState {
 
   @override
   List<Object?> get props => [isEmailVerified];
+}
+
+class CurrentUserState extends AuthState {
+  final UserEntity currentUser;
+
+  const CurrentUserState(this.currentUser);
+
+  @override
+  List<Object?> get props => [currentUser];
+}
+
+class UserActiveOnAppState extends AuthState {
+  const UserActiveOnAppState();
 }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/check_email_verify_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/email_verify_user.dart';
+import 'package:travel_point/src/features/authentication/domain/usecase/get_current_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/login_user_with_google.dart';
 import 'package:travel_point/src/features/authentication/domain/usecase/logout_user.dart';
@@ -15,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LogoutUserUsecase _logoutUserUsecase;
   final CheckEmailVerifyUserUsecase _checkEmailVerifyUserUsecase;
   final EmailVerifyUserUsecase _emailVerifyUserUsecase;
+  final GetUserUsecase _getUserUsecase;
 
   AuthBloc(
       this._loginUserUsecase,
@@ -22,7 +24,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       this._loginUserWithGoogleUsecase,
       this._logoutUserUsecase,
       this._checkEmailVerifyUserUsecase,
-      this._emailVerifyUserUsecase)
+      this._emailVerifyUserUsecase,
+      this._getUserUsecase)
       : super(const InitialAuthState()) {
     on<LoginAuthEvent>(_loginUserHandler);
 
@@ -35,6 +38,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckEmailVerifyUserAuthEvent>(_checkEmailVerifyUserHandler);
 
     on<EmailVerifyUserAuthEvent>(_emailVerifyUserHandler);
+
+    on<GetCurrentUserAuthEvent>(_getCurrentUserHandler);
+  }
+
+  Future<void> _getCurrentUserHandler(
+      GetCurrentUserAuthEvent event, Emitter<AuthState> emitter) async {
+    emit(const InitialAuthState());
+
+    final result = await _getUserUsecase();
+
+    result.fold(
+        (failure) =>
+            emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
+        (user) => emit(CurrentUserState(user)));
   }
 
   Future<void> _loginUserHandler(
@@ -47,7 +64,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
         (failure) =>
             emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
-        (success) => emit(const InitialAuthState()));
+        (success) => emit(const UserActiveOnAppState()));
   }
 
   Future<void> _signUpUserHandler(
@@ -63,7 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
         (failure) =>
             emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
-        (success) => emit(const InitialAuthState()));
+        (success) => emit(const UserActiveOnAppState()));
   }
 
   Future<void> _loginWithGoogleHandler(
@@ -76,7 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
         (failure) =>
             emit(ErrorAuthState(failure.errorMessage, failure.errorCode)),
-        (success) => emit(const InitialAuthState()));
+        (success) => emit(const UserActiveOnAppState()));
   }
 
   Future<void> _logoutUserHandler(
