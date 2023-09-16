@@ -237,15 +237,24 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<void> _getAutocompletePredictionsHandler(
-      GetPredictionsFromAutocompleteEvent event, Emitter<MapState> emitter) async {
-    final result = await _getPredictionsFromAutocompleteUseCase(event.inputSearchText);
+      GetPredictionsFromAutocompleteEvent event,
+      Emitter<MapState> emitter) async {
+    final result =
+        await _getPredictionsFromAutocompleteUseCase(event.inputSearchText);
 
     result.fold(
-          (failure) {
-            emit(ErrorMapState(failure.errorMessage, failure.errorCode));
+      (failure) {
+        emit(ErrorMapState(failure.errorMessage, failure.errorCode));
       },
-          (predictions) {
-            emit(InitialMapState(predictions: predictions));
+      (predictions) {
+        final updatedState = InitialMapState(
+          markers: state.markers,
+          cameraPosition: state.cameraPosition,
+          places: state.places,
+          predictions: predictions,
+        );
+
+        emit(updatedState);
       },
     );
   }
@@ -255,15 +264,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final result = await _getPlaceDetailsUsecase(event.placeId);
 
     result.fold(
-          (failure) {
+      (failure) {
         emit(ErrorMapState(failure.errorMessage, failure.errorCode));
       },
-          (placeDetails) {
-            emit(InitialMapState(placeDetails: placeDetails));
+      (placeDetails) {
+        emit(InitialMapState(placeDetails: placeDetails));
       },
     );
   }
-
 
   Future<void> _handleGetDistanceForNearbyPlaces(
       GetDistanceForNearbyPlacesEvent event, Emitter<MapState> emitter) async {

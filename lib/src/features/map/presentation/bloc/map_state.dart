@@ -9,39 +9,42 @@ abstract class MapState extends Equatable {
   final CameraPosition cameraPosition;
   final Set<Marker> markers;
   final List<PlaceModel> places;
+  final List<Prediction> predictions;
+
 
   const MapState(
       {this.distanceMatrixResponse,
       Set<Marker>? markers,
       CameraPosition? cameraPosition,
-      List<PlaceModel>? places})
+      List<PlaceModel>? places,
+        List<Prediction>? predictions})
       : markers = markers ?? const {},
         cameraPosition = cameraPosition ??
             const CameraPosition(
               target: LatLng(41.555418, 21.77),
               zoom: 7.7,
             ),
-        places = places ?? const [];
+        places = places ?? const [],
+        predictions = predictions ?? const [];
 
   @override
   List<Object?> get props => [markers, cameraPosition, places];
 }
 
 class InitialMapState extends MapState {
-  final List<Prediction> predictions;
   final PlaceDetails placeDetails;
 
   InitialMapState({
     super.markers,
     super.cameraPosition,
     super.places,
-    List<Prediction>? predictions,
+    super.predictions,
     PlaceDetails? placeDetails,
-  })  : predictions = predictions ?? const [],
+  })  :
         placeDetails = placeDetails ?? PlaceDetails(name: '', placeId: '');
 
   @override
-  List<Object?> get props => [predictions, placeDetails];
+  List<Object?> get props => [markers, places, predictions, placeDetails];
 }
 
 class LoadingMapState extends MapState {
@@ -56,7 +59,9 @@ class ResultMapState extends MapState {
       {super.distanceMatrixResponse,
       super.markers,
       super.cameraPosition,
-      super.places});
+      super.places,
+      super.predictions,
+      });
 }
 
 class ErrorMapState extends MapState {
