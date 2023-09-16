@@ -19,8 +19,6 @@ class DrawerMenu extends StatefulWidget {
 class _DrawerMenuState extends State<DrawerMenu> {
   UserEntity? userData;
   String? error;
-  bool hideVerifyEmail = false;
-  Timer? timer;
 
   void handleLogout(BuildContext context) async {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -29,34 +27,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
     const logoutEvent = LogoutUserAuthEvent();
 
     authBloc.add(logoutEvent);
-  }
-
-  void checkEmailVerification(BuildContext context) {
-    timer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      final authBloc = BlocProvider.of<AuthBloc>(context);
-
-      const checkEmailVerifyEvent = CheckEmailVerifyUserAuthEvent();
-
-      authBloc.add(checkEmailVerifyEvent);
-    });
-  }
-
-  void handleEmailVerify(context) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-
-    const emailVerifyEvent = EmailVerifyUserAuthEvent();
-
-    authBloc.add(emailVerifyEvent);
-
-    checkEmailVerification(context);
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
   }
 
   @override
@@ -97,19 +67,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
               ),
-              // padding: const EdgeInsets.only(top: 60, left: 10, bottom: 0),
-              // child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       FirebaseAuth.instance.currentUser?.emailVerified == false
-              //           ? TextButton(
-              //               onPressed: () => handleEmailVerify(context),
-              //               child: const Text('Verify email!',
-              //                   textAlign: TextAlign.left,
-              //                   style: TextStyle(color: Colors.white)),
-              //             )
-              //           : const Text('')
-              //     ]),
             ),
             ListTile(
               leading: const Icon(Icons.person),
@@ -137,12 +94,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
     }
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
-      if (state is CheckEmailVerifyState) {
-        if (state.isEmailVerified) {
-          timer?.cancel();
-        }
-      }
-
       return defaultScreen(state);
     });
   }
