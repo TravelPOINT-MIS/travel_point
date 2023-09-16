@@ -48,10 +48,22 @@ class MapRepositoryImpl implements MapRepository {
   ResultFuture<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText}) async {
     try {
-      List<Prediction> predictions =
-          await _remoteDataSource.getPredictionsFromAutocomplete(
-              searchInputText: searchInputText);
+      List<Prediction> predictions = await _remoteDataSource
+          .getPredictionsFromAutocomplete(searchInputText: searchInputText);
       return Right(predictions);
+    } on ApiException catch (error) {
+      final ApiFailure apiFailure = ApiFailure.fromApiException(error);
+      return Left(apiFailure);
+    }
+  }
+
+  @override
+  ResultFuture<PlaceDetails> getPlaceFromPlaceId(
+      {required String placeId}) async {
+    try {
+      PlaceDetails placesDetailsResponse =
+          await _remoteDataSource.getPlaceFromPlaceId(placeId: placeId);
+      return Right(placesDetailsResponse);
     } on ApiException catch (error) {
       final ApiFailure apiFailure = ApiFailure.fromApiException(error);
       return Left(apiFailure);

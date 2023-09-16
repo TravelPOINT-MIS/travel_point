@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/type/type_def.dart';
 
@@ -24,6 +25,19 @@ class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
       {required this.radius, required this.types});
 }
 
+class GetChosenLocationNearbyPlacesEvent extends MapEvent {
+  final int radius;
+final Position position;
+  final List<PlaceType> types;
+
+
+  @override
+  List<Object?> get props => [radius, types];
+
+  const GetChosenLocationNearbyPlacesEvent(
+      {required this.radius, required this.position, required this.types});
+}
+
 class ClearMarkersEvent extends MapEvent {
   final CameraPosition? keepSameCameraPosition;
 
@@ -46,3 +60,11 @@ class GetPredictionsFromAutocompleteEvent extends MapEvent {
 
   const GetPredictionsFromAutocompleteEvent({required this.inputSearchText});
 }
+
+class GetPlaceFromPlaceIdEvent extends MapEvent {
+  final String placeId;
+
+  const GetPlaceFromPlaceIdEvent({required this.placeId});
+}
+
+

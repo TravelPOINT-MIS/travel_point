@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -21,6 +20,8 @@ abstract class MapRemoteDataSource {
 
   Future<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText});
+
+  Future<PlaceDetails> getPlaceFromPlaceId({required String placeId});
 
   Future<DistanceMatrixResponse> getDistanceForNearbyPlaces(
       {required List<PlaceModel> destinationAddresses,
@@ -104,11 +105,20 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
   @override
   Future<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText}) async {
+    if (searchInputText.isEmpty) {
+      return <Prediction>[];
+    }
     final _places = GoogleMapsPlaces(apiKey: API_KEY);
-
     final response = await _places.autocomplete(searchInputText);
-
     return response.predictions;
+  }
+
+  @override
+  Future<PlaceDetails> getPlaceFromPlaceId({required String placeId}) async {
+    final places = GoogleMapsPlaces(apiKey: API_KEY);
+    final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
+    final placeDetails = placeDetailsResponse.result;
+    return placeDetails;
   }
 
   @override

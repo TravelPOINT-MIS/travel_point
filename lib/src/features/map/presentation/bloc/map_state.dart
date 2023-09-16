@@ -29,16 +29,19 @@ abstract class MapState extends Equatable {
 
 class InitialMapState extends MapState {
   final List<Prediction> predictions;
+  final PlaceDetails placeDetails;
 
-  const InitialMapState(
-      {super.markers,
-      super.cameraPosition,
-      super.places,
-      List<Prediction>? predictions})
-      : predictions = predictions ?? const [];
+  InitialMapState({
+    super.markers,
+    super.cameraPosition,
+    super.places,
+    List<Prediction>? predictions,
+    PlaceDetails? placeDetails,
+  })  : predictions = predictions ?? const [],
+        placeDetails = placeDetails ?? PlaceDetails(name: '', placeId: '');
 
   @override
-  List<Object?> get props => [predictions];
+  List<Object?> get props => [predictions, placeDetails];
 }
 
 class LoadingMapState extends MapState {

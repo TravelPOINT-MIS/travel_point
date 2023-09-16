@@ -19,6 +19,9 @@ abstract class MapRepository {
   ResultFuture<List<Prediction>> getPredictionsFromAutocomplete(
       {required String searchInputText});
 
+  ResultFuture<PlaceDetails> getPlaceFromPlaceId(
+      {required String placeId});
+
   ResultFuture<DistanceMatrixResponse> getDistanceForNearbyPlaces(
       {required List<PlaceModel> destinationAddresses,
       required LatLng originAddress,
