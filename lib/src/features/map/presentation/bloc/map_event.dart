@@ -27,9 +27,8 @@ class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
 
 class GetChosenLocationNearbyPlacesEvent extends MapEvent {
   final int radius;
-final Position position;
+  final Position position;
   final List<PlaceType> types;
-
 
   @override
   List<Object?> get props => [radius, types];
@@ -67,4 +66,6 @@ class GetPlaceFromPlaceIdEvent extends MapEvent {
   const GetPlaceFromPlaceIdEvent({required this.placeId});
 }
 
-
+class ResetStateToInitialEvent extends MapEvent {
+  const ResetStateToInitialEvent();
+}

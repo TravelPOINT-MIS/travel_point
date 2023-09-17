@@ -34,6 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<GetChosenLocationNearbyPlacesEvent>(
         _getNearbyPlacesFromChosenLocationHandler);
     on<GetPlaceFromPlaceIdEvent>(_getPlaceDetailsHandler);
+    on<ResetStateToInitialEvent>(_handleResetStateToInitial);
   }
 
   Future<void> _handleClearMarkers(
@@ -41,6 +42,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(const LoadingMapState());
 
     emit(InitialMapState(cameraPosition: event.keepSameCameraPosition));
+  }
+
+  Future<void> _handleResetStateToInitial(
+      ResetStateToInitialEvent event, Emitter<MapState> emitter) async {
+    emit(InitialMapState(
+      markers: state.markers,
+      cameraPosition: state.cameraPosition,
+      places: state.places,
+    ));
   }
 
   Future<void> _getUserCurrentLocationHandler(
