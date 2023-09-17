@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color primaryColor = Colors.redAccent;
-final Color primaryColorLight = Colors.redAccent.withOpacity(0.85);
+final Color primaryColorLight = Colors.redAccent.withOpacity(0.9);
 
 final ThemeData themeTravelPoint = ThemeData(
   brightness: Brightness.light,

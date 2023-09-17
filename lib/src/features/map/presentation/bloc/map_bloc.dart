@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/constants/constants.dart';
-import 'package:travel_point/core/widgets/marker_info.dart';
+import 'package:travel_point/src/features/map/presentation/views/marker_info.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_distance_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
