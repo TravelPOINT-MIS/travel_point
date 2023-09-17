@@ -108,8 +108,8 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
     if (searchInputText.isEmpty) {
       return <Prediction>[];
     }
-    final _places = GoogleMapsPlaces(apiKey: API_KEY);
-    final response = await _places.autocomplete(searchInputText);
+    final places = GoogleMapsPlaces(apiKey: API_KEY);
+    final response = await places.autocomplete(searchInputText);
     return response.predictions;
   }
 

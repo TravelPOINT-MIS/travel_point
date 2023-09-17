@@ -39,7 +39,7 @@ final ThemeData themeTravelPoint = ThemeData(
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      primary: primaryColor,
+      foregroundColor: primaryColor,
     ),
   ),
 );
