@@ -135,7 +135,10 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
           .join('|');
 
       final response = await _client.post(Uri.parse(
-          '$DISTANCE_MATRIX_API?origins=$originLatLong&destinations=$destinationsLatLong&mode=$travelMode&key=$API_KEY'));
+          '$DISTANCE_MATRIX_API?origins=$originLatLong&destinations=$destinationsLatLong&mode=${travelMode.name}&key=$API_KEY'));
+
+      print(Uri.parse(
+          '$DISTANCE_MATRIX_API?origins=$originLatLong&destinations=$destinationsLatLong&mode=$travelMode&key=$API_KEY').toString());
 
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw ApiException(

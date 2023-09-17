@@ -11,13 +11,12 @@ abstract class MapState extends Equatable {
   final List<PlaceModel> places;
   final List<Prediction> predictions;
 
-
   const MapState(
       {this.distanceMatrixResponse,
       Set<Marker>? markers,
       CameraPosition? cameraPosition,
       List<PlaceModel>? places,
-        List<Prediction>? predictions})
+      List<Prediction>? predictions})
       : markers = markers ?? const {},
         cameraPosition = cameraPosition ??
             const CameraPosition(
@@ -40,8 +39,7 @@ class InitialMapState extends MapState {
     super.places,
     super.predictions,
     PlaceDetails? placeDetails,
-  })  :
-        placeDetails = placeDetails ?? PlaceDetails(name: '', placeId: '');
+  }) : placeDetails = placeDetails ?? PlaceDetails(name: '', placeId: '');
 
   @override
   List<Object?> get props => [markers, places, predictions, placeDetails];
@@ -50,18 +48,24 @@ class InitialMapState extends MapState {
 class LoadingMapState extends MapState {
   final String loadingMessage;
 
-  const LoadingMapState({String? loadingMessage})
+  const LoadingMapState(
+      {String? loadingMessage,
+      super.cameraPosition,
+      super.distanceMatrixResponse,
+      super.markers,
+      super.places,
+      super.predictions})
       : loadingMessage = loadingMessage ?? 'Loading map locations...';
 }
 
 class ResultMapState extends MapState {
-  const ResultMapState(
-      {super.distanceMatrixResponse,
-      super.markers,
-      super.cameraPosition,
-      super.places,
-      super.predictions,
-      });
+  const ResultMapState({
+    super.distanceMatrixResponse,
+    super.markers,
+    super.cameraPosition,
+    super.places,
+    super.predictions,
+  });
 }
 
 class ErrorMapState extends MapState {

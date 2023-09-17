@@ -18,8 +18,14 @@ class DistanceMatrixResponse {
         List<String>.from(json?['destination_addresses'] ?? []);
     final List<String> originAddresses =
         List<String>.from(json?['origin_addresses'] ?? []);
-    final List<DistanceMatrixRow> rows = List<DistanceMatrixRow>.from(
-        (json?['rows'] ?? []).map((x) => DistanceMatrixRow.fromJson(x)));
+    final List<DistanceMatrixRow> rows =
+        (json?['rows'] ?? []).map<DistanceMatrixRow>((row) {
+      final List<DistanceMatrixElement> elements =
+          (row['elements'] ?? []).map<DistanceMatrixElement>((element) {
+        return DistanceMatrixElement.fromJson(element);
+      }).toList();
+      return DistanceMatrixRow(elements: elements);
+    }).toList();
     final DistanceMatrixStatus status =
         DistanceMatrixStatus.fromJson(json?['status']);
     final String? errorMessage = json?['error_message'];
@@ -35,28 +41,35 @@ class DistanceMatrixResponse {
 }
 
 class DistanceMatrixRow {
-  final DistanceMatrixStatus status;
-  final DistanceMatrixDuration duration;
-  final DistanceMatrixDistance distance;
+  final List<DistanceMatrixElement> elements;
 
   DistanceMatrixRow({
-    required this.status,
+    required this.elements,
+  });
+}
+
+class DistanceMatrixElement {
+  final DistanceMatrixDuration duration;
+  final DistanceMatrixDistance distance;
+  final String status;
+
+  DistanceMatrixElement({
     required this.duration,
     required this.distance,
+    required this.status,
   });
 
-  factory DistanceMatrixRow.fromJson(Map<String, dynamic>? json) {
-    final DistanceMatrixStatus status =
-        DistanceMatrixStatus.fromJson(json?['status']);
+  factory DistanceMatrixElement.fromJson(Map<String, dynamic>? json) {
     final DistanceMatrixDuration duration =
         DistanceMatrixDuration.fromJson(json?['duration']);
     final DistanceMatrixDistance distance =
         DistanceMatrixDistance.fromJson(json?['distance']);
+    final String status = json?['status'] ?? "";
 
-    return DistanceMatrixRow(
-      status: status,
+    return DistanceMatrixElement(
       duration: duration,
       distance: distance,
+      status: status,
     );
   }
 }

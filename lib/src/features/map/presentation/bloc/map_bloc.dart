@@ -279,8 +279,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final List<PlaceModel> nearbyPlaces = state.places;
     final CameraPosition cameraPosition = state.cameraPosition;
 
-    emit(const LoadingMapState(
-        loadingMessage: 'Getting distance for nearby places..'));
+    emit(LoadingMapState(
+        loadingMessage: 'Getting distance for nearby places..',
+        markers: markersShownOnMap,
+        places: nearbyPlaces,
+        cameraPosition: cameraPosition));
 
     final LatLng currentLocation = markersShownOnMap
         .firstWhere(
