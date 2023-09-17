@@ -286,8 +286,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<void> _handleGetDistanceForNearbyPlaces(
       GetDistanceForNearbyPlacesEvent event, Emitter<MapState> emitter) async {
     final Set<Marker> markersShownOnMap = state.markers;
-    final List<PlaceModel> nearbyPlaces = state.places;
+    List<PlaceModel> nearbyPlaces = state.places;
     final CameraPosition cameraPosition = state.cameraPosition;
+
+    if (nearbyPlaces.length > 25) {
+      nearbyPlaces = nearbyPlaces.take(25).toList();
+    }
 
     emit(LoadingMapState(
         loadingMessage: 'Getting distance for nearby places..',
