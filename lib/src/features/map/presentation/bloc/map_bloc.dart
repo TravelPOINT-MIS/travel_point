@@ -192,8 +192,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     Set<Marker> markers = {};
     List<PlaceModel> places = [];
 
-    final resultCurrentLocation = await _getUserCurrentLocationUsecase();
-
     final result = await _getNearbyPlacesUsecase(GetNearbyPlacesParams(
         fromPosition: event.position,
         radius: event.radius,

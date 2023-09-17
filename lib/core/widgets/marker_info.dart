@@ -44,7 +44,7 @@ class MarkerInfo extends StatelessWidget {
             const SizedBox(height: 4.0),
             Center(
               child: Text(
-                snippet ?? "", // Additional information
+                snippet, // Additional information
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14.0,
