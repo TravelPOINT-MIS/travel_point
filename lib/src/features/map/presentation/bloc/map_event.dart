@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/type/type_def.dart';
@@ -15,6 +16,7 @@ class GetCurrentLocationEvent extends MapEvent {
 }
 
 class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
+  final BuildContext context;
   final int radius;
   final List<PlaceType> types;
 
@@ -22,10 +24,11 @@ class GetCurrentLocationNearbyPlacesEvent extends MapEvent {
   List<Object?> get props => [radius, types];
 
   const GetCurrentLocationNearbyPlacesEvent(
-      {required this.radius, required this.types});
+      {required this.radius, required this.types, required this.context});
 }
 
 class GetChosenLocationNearbyPlacesEvent extends MapEvent {
+  final BuildContext context;
   final int radius;
   final Position position;
   final List<PlaceType> types;
@@ -34,7 +37,7 @@ class GetChosenLocationNearbyPlacesEvent extends MapEvent {
   List<Object?> get props => [radius, types];
 
   const GetChosenLocationNearbyPlacesEvent(
-      {required this.radius, required this.position, required this.types});
+      {required this.radius, required this.position, required this.types, required this.context});
 }
 
 class ClearMarkersEvent extends MapEvent {

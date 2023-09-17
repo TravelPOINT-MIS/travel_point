@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 const Color primaryColor = Colors.redAccent;
+final Color primaryColorLight = Colors.redAccent.withOpacity(0.85);
 
 final ThemeData themeTravelPoint = ThemeData(
   brightness: Brightness.light,
   primaryColor: primaryColor,
+  primaryColorLight: primaryColorLight,
   colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
   fontFamily: 'RobotoFlex',
   appBarTheme: const AppBarTheme(color: primaryColor),

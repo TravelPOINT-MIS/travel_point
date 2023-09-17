@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_point/core/constants/constants.dart';
+import 'package:travel_point/core/widgets/marker_info.dart';
 import 'package:travel_point/src/features/map/data/models/place_model.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_distance_nearby_places.dart';
 import 'package:travel_point/src/features/map/domain/usecase/get_nearby_places.dart';
@@ -69,8 +71,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
       final currentLocationMarker = Marker(
         markerId: const MarkerId(CURRENT_MARKER_ID),
+        alpha: 1,
+        flat: false,
         position: LatLng(position.latitude, position.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: const InfoWindow(title: 'This is your location!'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
       );
 
       final Set<Marker> markers = {currentLocationMarker};
@@ -119,11 +124,27 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                 markers.add(
                   Marker(
                     markerId: MarkerId(result.placeId ?? ''),
+                    alpha: 0.9,
+                    flat: false,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueRed),
                     position: LatLng(
                       result.geometry!.location!.lat ?? 0.0,
                       result.geometry!.location!.lng ?? 0.0,
                     ),
-                    infoWindow: InfoWindow(title: result.name ?? ""),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: event.context,
+                        builder: (context) {
+                          return MarkerInfo(
+                            title: result.name ?? "",
+                            snippet: result.businessStatus ?? "",
+                            rating: result.rating,
+                            types: result.types,
+                          );
+                        },
+                      );
+                    },
                   ),
                 );
 
@@ -144,11 +165,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           }
 
           final currentLocationMarker = Marker(
-            markerId: const MarkerId(CURRENT_MARKER_ID),
-            position: LatLng(position.latitude, position.longitude),
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          );
+              markerId: const MarkerId(CURRENT_MARKER_ID),
+              alpha: 1,
+              flat: false,
+              position: LatLng(position.latitude, position.longitude),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueOrange),
+              infoWindow: const InfoWindow(title: 'This is your location!'));
 
           markers.add(currentLocationMarker);
 
@@ -196,16 +219,29 @@ class MapBloc extends Bloc<MapEvent, MapState> {
             if (result.geometry != null &&
                 result.geometry!.location != null &&
                 result.name != null) {
-              markers.add(
-                Marker(
-                  markerId: MarkerId(result.placeId ?? ''),
-                  position: LatLng(
-                    result.geometry!.location!.lat ?? 0.0,
-                    result.geometry!.location!.lng ?? 0.0,
-                  ),
-                  infoWindow: InfoWindow(title: result.name ?? ""),
+              markers.add(Marker(
+                markerId: MarkerId(result.placeId ?? ''),
+                position: LatLng(
+                  result.geometry!.location!.lat ?? 0.0,
+                  result.geometry!.location!.lng ?? 0.0,
                 ),
-              );
+                alpha: 0.9,
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
+                onTap: () {
+                  showModalBottomSheet(
+                    context: event.context,
+                    builder: (context) {
+                      return MarkerInfo(
+                        title: result.name ?? "",
+                        snippet: result.businessStatus ?? "",
+                        rating: result.rating,
+                        types: result.types,
+                      );
+                    },
+                  );
+                },
+              ));
 
               final place = PlaceModel(
                   name: result.name!,
@@ -225,8 +261,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
         final currentLocationMarker = Marker(
           markerId: const MarkerId(CURRENT_MARKER_ID),
+          alpha: 1,
+          flat: false,
+          infoWindow: const InfoWindow(title: 'This is you location!'),
           position: LatLng(event.position.latitude, event.position.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
         );
 
         markers.add(currentLocationMarker);
